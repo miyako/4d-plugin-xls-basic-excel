@@ -1,0 +1,2004 @@
+<html xmlns:date="http://exslt.org/dates-and-times">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="./CSS/default.css">
+<title>XLS II</title>
+</head>
+<body>
+<h1>XLS II</h1>
+<p>
+<span class="title">Plugin Identifier: </span>20000</p>
+<p>
+<span class="title">Summary</span>
+</p>
+<ex4D:plugin-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS II here -->
+</ex4D:plugin-description>
+<a name="command:1"></a>
+<h2>File</h2>
+<a name="command:1,4"></a>
+<h3>XLS CLOSE</h3>
+<p>
+<code>XLS CLOSE (workbook)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS CLOSE here -->
+</ex4D:command-description>
+<a name="command:1,1"></a>
+<h3>XLS Create</h3>
+<p>
+<code>workbook:=XLS Create (sheets)</code>
+</p>
+<p>
+<code>sheets (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="sheets" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The number of worksheets to create in the workbook.</p>
+</ex4D:argument>
+<p>
+<code>workbook</code> (LONGINT)<br>
+<ex4D:return-value label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Create here -->
+</ex4D:command-description>
+<a name="command:1,2"></a>
+<h3>XLS Load</h3>
+<p>
+<code>workbook:=XLS Load (path)</code>
+</p>
+<p>
+<code>path (TEXT)</code>
+</p>
+<ex4D:argument argument-id="1" label="path" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (TEXT) here-->
+<p>The full path of the XLS file to read.</p>
+</ex4D:argument>
+<p>
+<code>workbook</code> (LONGINT)<br>
+<ex4D:return-value label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Load here -->
+</ex4D:command-description>
+<a name="command:1,3"></a>
+<h3>XLS Save as</h3>
+<p>
+<code>LONGINT:=XLS Save as (workbook; path)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>path (TEXT)</code>
+</p>
+<ex4D:argument argument-id="2" label="path" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (TEXT) here-->
+<p>The full path of the XLS file to write.</p>
+</ex4D:argument>
+<p>
+<code>returnValue</code> (LONGINT)<br>
+<ex4D:return-value label="" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Save as here -->
+</ex4D:command-description>
+<a name="command:2"></a>
+<h2>Workbook</h2>
+<a name="command:2,6"></a>
+<h3>XLS Add sheet</h3>
+<p>
+<code>LONGINT:=XLS Add sheet (workbook; name; position)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>name (TEXT)</code>
+</p>
+<ex4D:argument argument-id="2" label="name" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (TEXT) here-->
+<p>The name of the sheet to add.</p>
+</ex4D:argument>
+<p>
+<code>position (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="position" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>The position of the sheet to add, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>returnValue</code> (LONGINT)<br>
+<ex4D:return-value label="" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Add sheet here -->
+</ex4D:command-description>
+<a name="command:2,7"></a>
+<h3>XLS Get sheet name</h3>
+<p>
+<code>success:=XLS Get sheet name (workbook; sheet; name)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>name (TEXT)</code>
+</p>
+<ex4D:argument argument-id="3" label="name" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (TEXT) here-->
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get sheet name here -->
+</ex4D:command-description>
+<a name="command:2,5"></a>
+<h3>XLS Get total sheets</h3>
+<p>
+<code>rows:=XLS Get total sheets (workbook)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>rows</code> (LONGINT)<br>
+<ex4D:return-value label="rows" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+<p>The number of worksheets in this workbook.</p>
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get total sheets here -->
+</ex4D:command-description>
+<a name="command:2,8"></a>
+<h3>XLS Set sheet name</h3>
+<p>
+<code>success:=XLS Set sheet name (workbook; sheet; name)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>name (TEXT)</code>
+</p>
+<ex4D:argument argument-id="3" label="name" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (TEXT) here-->
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Set sheet name here -->
+</ex4D:command-description>
+<a name="command:3"></a>
+<h2>Worksheet</h2>
+<a name="command:3,12"></a>
+<h3>XLS Get column width</h3>
+<p>
+<code>width:=XLS Get column width (workbook; sheet; column)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>width</code> (LONGINT)<br>
+<ex4D:return-value label="width" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get column width here -->
+</ex4D:command-description>
+<a name="command:3,10"></a>
+<h3>XLS Get total columns</h3>
+<p>
+<code>columns:=XLS Get total columns (workbook; sheet)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>columns</code> (LONGINT)<br>
+<ex4D:return-value label="columns" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get total columns here -->
+</ex4D:command-description>
+<a name="command:3,9"></a>
+<h3>XLS Get total rows</h3>
+<p>
+<code>rows:=XLS Get total rows (workbook; sheet)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>rows</code> (LONGINT)<br>
+<ex4D:return-value label="rows" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get total rows here -->
+</ex4D:command-description>
+<a name="command:3,13"></a>
+<h3>XLS Merge cells</h3>
+<p>
+<code>success:=XLS Merge cells (workbook; sheet; row; column; height; width)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>height (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="5" label="height" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>width (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="6" label="width" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $6 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Merge cells here -->
+</ex4D:command-description>
+<a name="command:3,11"></a>
+<h3>XLS Set column width</h3>
+<p>
+<code>success:=XLS Set column width (workbook; sheet; column; width)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>width (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="width" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Set column width here -->
+</ex4D:command-description>
+<a name="command:4"></a>
+<h2>Cell</h2>
+<a name="command:4,14"></a>
+<h3>XLS Clear value</h3>
+<p>
+<code>success:=XLS Clear value (workbook; sheet; row; column)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Clear value here -->
+</ex4D:command-description>
+<a name="command:4,17"></a>
+<h3>XLS Get long value</h3>
+<p>
+<code>value:=XLS Get long value (workbook; sheet; row; column)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>value</code> (LONGINT)<br>
+<ex4D:return-value label="value" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get long value here -->
+</ex4D:command-description>
+<a name="command:4,16"></a>
+<h3>XLS Get real value</h3>
+<p>
+<code>value:=XLS Get real value (workbook; sheet; row; column)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>value</code> (REAL)<br>
+<ex4D:return-value label="value" type="8" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (REAL) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get real value here -->
+</ex4D:command-description>
+<a name="command:4,15"></a>
+<h3>XLS Get text value</h3>
+<p>
+<code>value:=XLS Get text value (workbook; sheet; row; column)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>value</code> (TEXT)<br>
+<ex4D:return-value label="value" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (TEXT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get text value here -->
+</ex4D:command-description>
+<a name="command:4,21"></a>
+<h3>XLS Get value type</h3>
+<p>
+<code>type:=XLS Get value type (workbook; sheet; row; column)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>type</code> (LONGINT)<br>
+<ex4D:return-value label="type" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get value type here -->
+</ex4D:command-description>
+<a name="command:4,18"></a>
+<h3>XLS Set long value</h3>
+<p>
+<code>success:=XLS Set long value (workbook; sheet; row; column; value)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>value (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="5" label="value" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Set long value here -->
+</ex4D:command-description>
+<a name="command:4,19"></a>
+<h3>XLS Set real value</h3>
+<p>
+<code>success:=XLS Set real value (workbook; sheet; row; column; value)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>value (REAL)</code>
+</p>
+<ex4D:argument argument-id="5" label="value" type="8" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (REAL) here-->
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Set real value here -->
+</ex4D:command-description>
+<a name="command:4,20"></a>
+<h3>XLS Set text value</h3>
+<p>
+<code>XLS Set text value (workbook; sheet; row; column; value)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>value (TEXT)</code>
+</p>
+<ex4D:argument argument-id="5" label="value" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (TEXT) here-->
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Set text value here -->
+</ex4D:command-description>
+<a name="command:5"></a>
+<h2>Font</h2>
+<a name="command:5,23"></a>
+<h3>XLS GET FONT PROPERTY</h3>
+<p>
+<code>XLS GET FONT PROPERTY (workbook; sheet; row; column; name; height; color; weight; option; underline; family; escapement)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>The sheet number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>The row number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+<p>The column number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>name (TEXT)</code>
+</p>
+<ex4D:argument argument-id="5" label="name" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (TEXT) here-->
+</ex4D:argument>
+<p>
+<code>height (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="6" label="height" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $6 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>color (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="7" label="color" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $7 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>weight (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="8" label="weight" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $8 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>option (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="9" label="option" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $9 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>underline (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="10" label="underline" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $10 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>family (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="11" label="family" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $11 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>escapement (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="12" label="escapement" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $12 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS GET FONT PROPERTY here -->
+</ex4D:command-description>
+<a name="command:5,22"></a>
+<h3>XLS SET FONT PROPERTY</h3>
+<p>
+<code>XLS SET FONT PROPERTY (workbook; sheet; row; column; name; height; color; weight; option; underline; family; escapement)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>The sheet number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>The row number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+<p>The column number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>name (TEXT)</code>
+</p>
+<ex4D:argument argument-id="5" label="name" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (TEXT) here-->
+</ex4D:argument>
+<p>
+<code>height (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="6" label="height" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $6 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>color (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="7" label="color" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $7 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>weight (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="8" label="weight" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $8 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>option (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="9" label="option" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $9 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>underline (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="10" label="underline" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $10 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>family (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="11" label="family" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $11 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>escapement (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="12" label="escapement" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $12 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS SET FONT PROPERTY here -->
+</ex4D:command-description>
+<a name="command:6"></a>
+<h2>Format</h2>
+<a name="command:6,25"></a>
+<h3>XLS GET FORMAT PROPERTY</h3>
+<p>
+<code>XLS GET FORMAT PROPERTY (workbook; sheet; row; column; alignment; rotation; textProps; borderlineTop; borderlineTopColor; borderlineLeft; borderlineLeftColor; borderlineRight; borderlineRightColor; borderlineBottom; borderlineBottomColor; pattern; patternColor; patternBackColor)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>The sheet number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>The row number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+<p>The column number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>alignment (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="5" label="alignment" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (LONGINT) here-->
+<p>The alignment.</p>
+</ex4D:argument>
+<p>
+<code>rotation (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="6" label="rotation" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $6 (LONGINT) here-->
+<p>The rotation angle.</p>
+</ex4D:argument>
+<p>
+<code>textProps (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="7" label="textProps" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $7 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineTop (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="8" label="borderlineTop" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $8 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineTopColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="9" label="borderlineTopColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $9 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineLeft (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="10" label="borderlineLeft" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $10 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineLeftColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="11" label="borderlineLeftColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $11 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineRight (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="12" label="borderlineRight" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $12 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineRightColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="13" label="borderlineRightColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $13 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineBottom (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="14" label="borderlineBottom" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $14 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineBottomColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="15" label="borderlineBottomColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $15 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>pattern (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="16" label="pattern" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $16 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>patternColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="17" label="patternColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $17 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>patternBackColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="18" label="patternBackColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $18 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS GET FORMAT PROPERTY here -->
+</ex4D:command-description>
+<a name="command:6,26"></a>
+<h3>XLS Get format string</h3>
+<p>
+<code>success:=XLS Get format string (workbook; sheet; row; column; format)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>format (TEXT)</code>
+</p>
+<ex4D:argument argument-id="5" label="format" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (TEXT) here-->
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get format string here -->
+</ex4D:command-description>
+<a name="command:6,28"></a>
+<h3>XLS Get wrapping</h3>
+<p>
+<code>wrapping:=XLS Get wrapping (workbook; sheet; row; column)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>wrapping</code> (LONGINT)<br>
+<ex4D:return-value label="wrapping" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Get wrapping here -->
+</ex4D:command-description>
+<a name="command:6,24"></a>
+<h3>XLS SET FORMAT PROPERTY</h3>
+<p>
+<code>XLS SET FORMAT PROPERTY (workbook; sheet; row; column; alignment; rotation; textProps; borderlineTop; borderlineTopColor; borderlineLeft; borderlineLeftColor; borderlineRight; borderlineRightColor; borderlineBottom; borderlineBottomColor; pattern; patternColor; patternBackColor)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+<p>The workbook reference, returned by <a href="#command:1,1">XLS Create</a> or <a href="#command:1,2">XLS Load</a>.</p>
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+<p>The sheet number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+<p>The row number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+<p>The column number, starting from 1.</p>
+</ex4D:argument>
+<p>
+<code>alignment (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="5" label="alignment" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (LONGINT) here-->
+<p>The alignment.</p>
+</ex4D:argument>
+<p>
+<code>rotation (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="6" label="rotation" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $6 (LONGINT) here-->
+<p>The rotation angle.</p>
+</ex4D:argument>
+<p>
+<code>textProps (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="7" label="textProps" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $7 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineTop (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="8" label="borderlineTop" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $8 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineTopColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="9" label="borderlineTopColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $9 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineLeft (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="10" label="borderlineLeft" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $10 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineLeftColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="11" label="borderlineLeftColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $11 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineRight (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="12" label="borderlineRight" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $12 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineRightColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="13" label="borderlineRightColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $13 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineBottom (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="14" label="borderlineBottom" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $14 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>borderlineBottomColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="15" label="borderlineBottomColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $15 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>pattern (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="16" label="pattern" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $16 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>patternColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="17" label="patternColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $17 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>patternBackColor (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="18" label="patternBackColor" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $18 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS SET FORMAT PROPERTY here -->
+</ex4D:command-description>
+<a name="command:6,29"></a>
+<h3>XLS SET WRAPPING</h3>
+<p>
+<code>XLS SET WRAPPING (workbook; sheet; row; column; wrapping)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>wrapping (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="5" label="wrapping" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS SET WRAPPING here -->
+</ex4D:command-description>
+<a name="command:6,27"></a>
+<h3>XLS Set format string</h3>
+<p>
+<code>success:=XLS Set format string (workbook; sheet; row; column; format)</code>
+</p>
+<p>
+<code>workbook (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="1" label="workbook" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $1 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>sheet (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="2" label="sheet" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $2 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>row (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="3" label="row" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $3 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>column (LONGINT)</code>
+</p>
+<ex4D:argument argument-id="4" label="column" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $4 (LONGINT) here-->
+</ex4D:argument>
+<p>
+<code>format (TEXT)</code>
+</p>
+<ex4D:argument argument-id="5" label="format" type="T" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for $5 (TEXT) here-->
+<p>Example of format strings can be found <a href="http://www.ozgrid.com/Excel/CustomFormats.htm">here.</a></p>
+<p>
+<li>0</li>
+<li>0.00</li>
+<li>#,##0</li>
+<li>#,##0.00</li>
+<li>"$"#,##0_);("$"#,##0)0</li>
+<li>"$"#,##0_);[Red]("$"#,##0)</li>
+<li>"$"#,##0.00_);("$"#,##0.00)</li>
+<li>"$"#,##0.00_);[Red]("$"#,##0.00)</li>
+<li>0%</li>
+<li>0.00%</li>
+<li>0.00E+00</li>
+<li># ?/?</li>
+<li># ?\?/?\?</li>
+<li>M/D/YY</li>
+<li>D-MMM-Y</li>
+<li>D-MMM</li>
+<li>MMM-YY</li>
+<li>h:mm AM/PM</li>
+<li>h:mm:ss AM/PM</li>
+<li>h:mm</li>
+<li>h:mm:ss</li>
+<li>M/D/YY h:mm</li>
+<li>_(#,##0_);(#,##0)</li>
+<li>_(#,##0_);[Red](#,##0)</li>
+<li>_(#,##0.00_);(#,##0.00)</li>
+<li>_(#,##0.00_);[Red](#,##0.00)</li>
+<li>_(* #,##0_);_(* (#,##0);_(* "-"_);_(@_)</li>
+<li>_($* #,##0_);_($* (#,##0);_($* "-"_);_(@_)</li>
+<li>_(* #,##0.00_);_(* (#,##0.00);_(* "-"??_);_(@_)</li>
+<li>_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)</li>
+<li>mm:ss</li>
+<li>[h]:mm:ss</li>
+<li>mm:ss.0</li>
+<li>##0.0E+0</li>
+<li>@</li>
+</p>
+</ex4D:argument>
+<p>
+<code>success</code> (LONGINT)<br>
+<ex4D:return-value label="success" type="L" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for return value (LONGINT) here-->
+</ex4D:return-value>
+</p>
+<p>
+<span class="title">Discussion</span>
+</p>
+<ex4D:command-description xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Set format string here -->
+</ex4D:command-description>
+<a name="constant:1"></a>
+<h2>XLS Cell Value Type</h2>
+<p>
+<code><a name="constant:1,1"></a>XLS Cell Undefined (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Cell Undefined" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Cell Undefined (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:1,2"></a>XLS Cell Integer (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Cell Integer" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Cell Integer (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:1,3"></a>XLS Cell Double (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Cell Double" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Cell Double (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:1,4"></a>XLS Cell ANSI String (3)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS Cell ANSI String" type="L" value="3" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Cell ANSI String (3) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:1,5"></a>XLS Cell Unicode String (4)</code>
+</p>
+<ex4D:constant constant-id="5" name="XLS Cell Unicode String" type="L" value="4" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Cell Unicode String (4) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:1,6"></a>XLS Cell Formula (5)</code>
+</p>
+<ex4D:constant constant-id="6" name="XLS Cell Formula" type="L" value="5" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Cell Formula (5) here-->
+</ex4D:constant>
+<a name="constant:2"></a>
+<h2>XLS Font Options</h2>
+<p>
+<code><a name="constant:2,1"></a>XLS Font Bold (1)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Font Bold" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Bold (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,2"></a>XLS Font Italic (2)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Font Italic" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Italic (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,3"></a>XLS Font Underlined (4)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Font Underlined" type="L" value="4" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Underlined (4) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,4"></a>XLS Font Struck Out (8)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS Font Struck Out" type="L" value="8" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Struck Out (8) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,5"></a>XLS Font Outlined (16)</code>
+</p>
+<ex4D:constant constant-id="5" name="XLS Font Outlined" type="L" value="16" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Outlined (16) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,6"></a>XLS Font Shadowed (32)</code>
+</p>
+<ex4D:constant constant-id="6" name="XLS Font Shadowed" type="L" value="32" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Shadowed (32) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,7"></a>XLS Font Condensed (64)</code>
+</p>
+<ex4D:constant constant-id="7" name="XLS Font Condensed" type="L" value="64" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Condensed (64) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:2,8"></a>XLS Font Extended (128)</code>
+</p>
+<ex4D:constant constant-id="8" name="XLS Font Extended" type="L" value="128" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Extended (128) here-->
+</ex4D:constant>
+<a name="constant:3"></a>
+<h2>XLS Font Escapements</h2>
+<p>
+<code><a name="constant:3,1"></a>XLS Escapement Normal (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Escapement Normal" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Escapement Normal (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:3,2"></a>XLS Escapement Superscript (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Escapement Superscript" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Escapement Superscript (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:3,3"></a>XLS Escapement Subscript (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Escapement Subscript" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Escapement Subscript (2) here-->
+</ex4D:constant>
+<a name="constant:4"></a>
+<h2>XLS Font Underlines</h2>
+<p>
+<code><a name="constant:4,1"></a>XLS Underline None (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Underline None" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Underline None (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,2"></a>XLS Underline Single (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Underline Single" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Underline Single (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,3"></a>XLS Underline Double (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Underline Double" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Underline Double (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,4"></a>XLS Underline Single Account (33)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS Underline Single Account" type="L" value="33" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Underline Single Account (33) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:4,5"></a>XLS Underline Double Account (34)</code>
+</p>
+<ex4D:constant constant-id="5" name="XLS Underline Double Account" type="L" value="34" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Underline Double Account (34) here-->
+</ex4D:constant>
+<a name="constant:5"></a>
+<h2>XLS Font Family</h2>
+<p>
+<code><a name="constant:5,1"></a>XLS Font Family Dontcare (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Font Family Dontcare" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Family Dontcare (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:5,2"></a>XLS Font Family Roman (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Font Family Roman" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Family Roman (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:5,3"></a>XLS Font Family Swiss (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Font Family Swiss" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Family Swiss (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:5,4"></a>XLS Font Family Modern (3)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS Font Family Modern" type="L" value="3" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Family Modern (3) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:5,5"></a>XLS Font Family Script (4)</code>
+</p>
+<ex4D:constant constant-id="5" name="XLS Font Family Script" type="L" value="4" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Family Script (4) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:5,6"></a>XLS Font Family Decorative (5)</code>
+</p>
+<ex4D:constant constant-id="6" name="XLS Font Family Decorative" type="L" value="5" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Family Decorative (5) here-->
+</ex4D:constant>
+<a name="constant:6"></a>
+<h2>XLS Colors</h2>
+<p>
+<code><a name="constant:6,1"></a>XLS Color Black (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Color Black" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Color Black (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:6,2"></a>XLS Color White (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Color White" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Color White (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:6,3"></a>XLS Color Red (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Color Red" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Color Red (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:6,4"></a>XLS Color Green (3)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS Color Green" type="L" value="3" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Color Green (3) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:6,5"></a>XLS Color Blue (4)</code>
+</p>
+<ex4D:constant constant-id="5" name="XLS Color Blue" type="L" value="4" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Color Blue (4) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:6,6"></a>XLS Color Yellow (5)</code>
+</p>
+<ex4D:constant constant-id="6" name="XLS Color Yellow" type="L" value="5" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Color Yellow (5) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:6,7"></a>XLS Color Magenda (6)</code>
+</p>
+<ex4D:constant constant-id="7" name="XLS Color Magenda" type="L" value="6" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Color Magenda (6) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:6,8"></a>XLS Color Cyan (7)</code>
+</p>
+<ex4D:constant constant-id="8" name="XLS Color Cyan" type="L" value="7" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Color Cyan (7) here-->
+</ex4D:constant>
+<a name="constant:7"></a>
+<h2>XLS Color Patterns</h2>
+<p>
+<code><a name="constant:7,1"></a>XLS Pattern Empty (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Pattern Empty" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern Empty (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,2"></a>XLS Pattern Solid (67108864)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Pattern Solid" type="L" value="67108864" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern Solid (67108864) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,3"></a>XLS Pattern 2 (134217728)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Pattern 2" type="L" value="134217728" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 2 (134217728) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,4"></a>XLS Pattern 3 (201326592)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS Pattern 3" type="L" value="201326592" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 3 (201326592) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,5"></a>XLS Pattern 4 (268435456)</code>
+</p>
+<ex4D:constant constant-id="5" name="XLS Pattern 4" type="L" value="268435456" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 4 (268435456) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,6"></a>XLS Pattern 5 (335544320)</code>
+</p>
+<ex4D:constant constant-id="6" name="XLS Pattern 5" type="L" value="335544320" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 5 (335544320) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,7"></a>XLS Pattern 6 (402653184)</code>
+</p>
+<ex4D:constant constant-id="7" name="XLS Pattern 6" type="L" value="402653184" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 6 (402653184) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,8"></a>XLS Pattern 7 (469762048)</code>
+</p>
+<ex4D:constant constant-id="8" name="XLS Pattern 7" type="L" value="469762048" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 7 (469762048) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,9"></a>XLS Pattern 8 (536870912)</code>
+</p>
+<ex4D:constant constant-id="9" name="XLS Pattern 8" type="L" value="536870912" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 8 (536870912) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,10"></a>XLS Pattern 9 (603979776)</code>
+</p>
+<ex4D:constant constant-id="10" name="XLS Pattern 9" type="L" value="603979776" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 9 (603979776) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,11"></a>XLS Pattern 10 (671088640)</code>
+</p>
+<ex4D:constant constant-id="11" name="XLS Pattern 10" type="L" value="671088640" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 10 (671088640) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,12"></a>XLS Pattern 11 (738197504)</code>
+</p>
+<ex4D:constant constant-id="12" name="XLS Pattern 11" type="L" value="738197504" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 11 (738197504) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,13"></a>XLS Pattern 12 (805306368)</code>
+</p>
+<ex4D:constant constant-id="13" name="XLS Pattern 12" type="L" value="805306368" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 12 (805306368) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,14"></a>XLS Pattern 13 (872415232)</code>
+</p>
+<ex4D:constant constant-id="14" name="XLS Pattern 13" type="L" value="872415232" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 13 (872415232) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,15"></a>XLS Pattern 14 (939524096)</code>
+</p>
+<ex4D:constant constant-id="15" name="XLS Pattern 14" type="L" value="939524096" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 14 (939524096) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,16"></a>XLS Pattern 15 (1006632960)</code>
+</p>
+<ex4D:constant constant-id="16" name="XLS Pattern 15" type="L" value="1006632960" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 15 (1006632960) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,17"></a>XLS Pattern 16 (1073741824)</code>
+</p>
+<ex4D:constant constant-id="17" name="XLS Pattern 16" type="L" value="1073741824" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 16 (1073741824) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,18"></a>XLS Pattern 17 (1140850668)</code>
+</p>
+<ex4D:constant constant-id="18" name="XLS Pattern 17" type="L" value="1140850668" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 17 (1140850668) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:7,19"></a>XLS Pattern 18 (1207959552)</code>
+</p>
+<ex4D:constant constant-id="19" name="XLS Pattern 18" type="L" value="1207959552" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Pattern 18 (1207959552) here-->
+</ex4D:constant>
+<a name="constant:8"></a>
+<h2>XLS Font Weight</h2>
+<p>
+<code><a name="constant:8,1"></a>XLS Font Weight Normal (400)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Font Weight Normal" type="L" value="400" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Weight Normal (400) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:8,2"></a>XLS Font Weight Bold (700)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Font Weight Bold" type="L" value="700" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Font Weight Bold (700) here-->
+</ex4D:constant>
+<a name="constant:9"></a>
+<h2>XLS Text Property</h2>
+<p>
+<code><a name="constant:9,2"></a>XLS Text Default (0)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Text Default" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Text Default (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:9,1"></a>XLS Text Shrink (16)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Text Shrink" type="L" value="16" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Text Shrink (16) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:9,3"></a>XLS Text Left to Right (64)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Text Left to Right" type="L" value="64" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Text Left to Right (64) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:9,4"></a>XLS Text Right to Left (128)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS Text Right to Left" type="L" value="128" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Text Right to Left (128) here-->
+</ex4D:constant>
+<a name="constant:10"></a>
+<h2>XLS Border Styles</h2>
+<p>
+<code><a name="constant:10,16"></a>XLS Border Diagonal Up (-2147483648)</code>
+</p>
+<ex4D:constant constant-id="16" name="XLS Border Diagonal Up" type="L" value="-2147483648" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Diagonal Up (-2147483648) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,1"></a>XLS Border None (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS Border None" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border None (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,2"></a>XLS Border Thin (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS Border Thin" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Thin (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,3"></a>XLS Border Medium (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS Border Medium" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Medium (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,4"></a>XLS Border Dashed (3)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS Border Dashed" type="L" value="3" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Dashed (3) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,5"></a>XLS Border Dotted (4)</code>
+</p>
+<ex4D:constant constant-id="5" name="XLS Border Dotted" type="L" value="4" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Dotted (4) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,6"></a>XLS Border Thick (5)</code>
+</p>
+<ex4D:constant constant-id="6" name="XLS Border Thick" type="L" value="5" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Thick (5) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,7"></a>XLS Border Double (6)</code>
+</p>
+<ex4D:constant constant-id="7" name="XLS Border Double" type="L" value="6" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Double (6) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,8"></a>XLS Border Hair (7)</code>
+</p>
+<ex4D:constant constant-id="8" name="XLS Border Hair" type="L" value="7" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Hair (7) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,9"></a>XLS Border Dashed (8)</code>
+</p>
+<ex4D:constant constant-id="9" name="XLS Border Dashed" type="L" value="8" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Dashed (8) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,10"></a>XLS Border Dash Dotted 1 (9)</code>
+</p>
+<ex4D:constant constant-id="10" name="XLS Border Dash Dotted 1" type="L" value="9" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Dash Dotted 1 (9) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,11"></a>XLS Border Dash Dotted 2 (10)</code>
+</p>
+<ex4D:constant constant-id="11" name="XLS Border Dash Dotted 2" type="L" value="10" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Dash Dotted 2 (10) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,12"></a>XLS Border Dash Dot Dotted 1 (11)</code>
+</p>
+<ex4D:constant constant-id="12" name="XLS Border Dash Dot Dotted 1" type="L" value="11" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Dash Dot Dotted 1 (11) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,13"></a>XLS Border Dash Dot Dotted 2 (12)</code>
+</p>
+<ex4D:constant constant-id="13" name="XLS Border Dash Dot Dotted 2" type="L" value="12" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Dash Dot Dotted 2 (12) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,14"></a>XLS Border Dash Dot Dotted 3 (13)</code>
+</p>
+<ex4D:constant constant-id="14" name="XLS Border Dash Dot Dotted 3" type="L" value="13" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Dash Dot Dotted 3 (13) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:10,15"></a>XLS Border Diagonal Down (1073741824)</code>
+</p>
+<ex4D:constant constant-id="15" name="XLS Border Diagonal Down" type="L" value="1073741824" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Border Diagonal Down (1073741824) here-->
+</ex4D:constant>
+<a name="constant:11"></a>
+<h2>XLS Font Alignment</h2>
+<p>
+<code><a name="constant:11,1"></a>XLS H Align General (0)</code>
+</p>
+<ex4D:constant constant-id="1" name="XLS H Align General" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS H Align General (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,8"></a>XLS V Align Top (0)</code>
+</p>
+<ex4D:constant constant-id="8" name="XLS V Align Top" type="L" value="0" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS V Align Top (0) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,2"></a>XLS H Align Left (1)</code>
+</p>
+<ex4D:constant constant-id="2" name="XLS H Align Left" type="L" value="1" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS H Align Left (1) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,3"></a>XLS H Align Centered (2)</code>
+</p>
+<ex4D:constant constant-id="3" name="XLS H Align Centered" type="L" value="2" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS H Align Centered (2) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,4"></a>XLS H Align Right (3)</code>
+</p>
+<ex4D:constant constant-id="4" name="XLS H Align Right" type="L" value="3" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS H Align Right (3) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,5"></a>XLS H Align Filled (4)</code>
+</p>
+<ex4D:constant constant-id="5" name="XLS H Align Filled" type="L" value="4" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS H Align Filled (4) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,6"></a>XLS H Align Justified (5)</code>
+</p>
+<ex4D:constant constant-id="6" name="XLS H Align Justified" type="L" value="5" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS H Align Justified (5) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,7"></a>XLS H Align Sel Centered (6)</code>
+</p>
+<ex4D:constant constant-id="7" name="XLS H Align Sel Centered" type="L" value="6" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS H Align Sel Centered (6) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,9"></a>XLS V Align Centered (16)</code>
+</p>
+<ex4D:constant constant-id="9" name="XLS V Align Centered" type="L" value="16" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS V Align Centered (16) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,10"></a>XLS V Align Bottom (32)</code>
+</p>
+<ex4D:constant constant-id="10" name="XLS V Align Bottom" type="L" value="32" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS V Align Bottom (32) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,11"></a>XLS V Align Justified (48)</code>
+</p>
+<ex4D:constant constant-id="11" name="XLS V Align Justified" type="L" value="48" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS V Align Justified (48) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,12"></a>XLS V Align Distributed (64)</code>
+</p>
+<ex4D:constant constant-id="12" name="XLS V Align Distributed" type="L" value="64" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS V Align Distributed (64) here-->
+</ex4D:constant>
+<p>
+<code><a name="constant:11,13"></a>XLS Justify Last Line (128)</code>
+</p>
+<ex4D:constant constant-id="13" name="XLS Justify Last Line" type="L" value="128" xmlns:ex4D="http://www.4d.com/plugin">
+<!-- write documentation for XLS Justify Last Line (128) here-->
+</ex4D:constant>
+<p class="footer">
+<span class="title">Documentation Update: </span>2012-10-01T10:06:5509:00</p>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<html xmlns:date="http://exslt.org/dates-and-times">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="./CSS/default.css">
+<title>XLS II</title>
+</head>
+<body>
+<h3>Commands</h3>
+<p>
+<a target="content" href="./content.html#command:1">File</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#command:1,4">XLS CLOSE</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:1,1">XLS Create</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:1,2">XLS Load</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:1,3">XLS Save as</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#command:2">Workbook</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#command:2,6">XLS Add sheet</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:2,7">XLS Get sheet name</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:2,5">XLS Get total sheets</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:2,8">XLS Set sheet name</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#command:3">Worksheet</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#command:3,12">XLS Get column width</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:3,10">XLS Get total columns</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:3,9">XLS Get total rows</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:3,13">XLS Merge cells</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:3,11">XLS Set column width</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#command:4">Cell</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#command:4,14">XLS Clear value</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:4,17">XLS Get long value</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:4,16">XLS Get real value</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:4,15">XLS Get text value</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:4,21">XLS Get value type</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:4,18">XLS Set long value</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:4,19">XLS Set real value</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:4,20">XLS Set text value</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#command:5">Font</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#command:5,23">XLS GET FONT PROPERTY</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:5,22">XLS SET FONT PROPERTY</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#command:6">Format</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#command:6,25">XLS GET FORMAT PROPERTY</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:6,26">XLS Get format string</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:6,28">XLS Get wrapping</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:6,24">XLS SET FORMAT PROPERTY</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:6,29">XLS SET WRAPPING</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#command:6,27">XLS Set format string</a>
+</dd>
+</dl>
+<h3>Constants</h3>
+<p>
+<a target="content" href="./content.html#constant:1">XLS Cell Value Type</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:1,1">XLS Cell Undefined</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:1,2">XLS Cell Integer</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:1,3">XLS Cell Double</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:1,4">XLS Cell ANSI String</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:1,5">XLS Cell Unicode String</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:1,6">XLS Cell Formula</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:2">XLS Font Options</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:2,1">XLS Font Bold</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:2,8">XLS Font Extended</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:2,5">XLS Font Outlined</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:2,2">XLS Font Italic</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:2,6">XLS Font Shadowed</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:2,3">XLS Font Underlined</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:2,7">XLS Font Condensed</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:2,4">XLS Font Struck Out</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:3">XLS Font Escapements</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:3,1">XLS Escapement Normal</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:3,2">XLS Escapement Superscript</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:3,3">XLS Escapement Subscript</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:4">XLS Font Underlines</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:4,1">XLS Underline None</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:4,2">XLS Underline Single</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:4,3">XLS Underline Double</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:4,4">XLS Underline Single Account</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:4,5">XLS Underline Double Account</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:5">XLS Font Family</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:5,1">XLS Font Family Dontcare</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:5,2">XLS Font Family Roman</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:5,3">XLS Font Family Swiss</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:5,4">XLS Font Family Modern</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:5,5">XLS Font Family Script</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:5,6">XLS Font Family Decorative</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:6">XLS Colors</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:6,1">XLS Color Black</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:6,2">XLS Color White</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:6,3">XLS Color Red</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:6,4">XLS Color Green</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:6,5">XLS Color Blue</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:6,6">XLS Color Yellow</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:6,7">XLS Color Magenda</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:6,8">XLS Color Cyan</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:7">XLS Color Patterns</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:7,1">XLS Pattern Empty</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,16">XLS Pattern 15</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,17">XLS Pattern 16</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,18">XLS Pattern 17</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,19">XLS Pattern 18</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,3">XLS Pattern 2</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,4">XLS Pattern 3</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,5">XLS Pattern 4</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,6">XLS Pattern 5</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,7">XLS Pattern 6</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,8">XLS Pattern 7</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,9">XLS Pattern 8</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,10">XLS Pattern 9</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,2">XLS Pattern Solid</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,11">XLS Pattern 10</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,12">XLS Pattern 11</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,13">XLS Pattern 12</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,14">XLS Pattern 13</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:7,15">XLS Pattern 14</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:8">XLS Font Weight</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:8,1">XLS Font Weight Normal</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:8,2">XLS Font Weight Bold</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:9">XLS Text Property</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:9,2">XLS Text Default</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:9,4">XLS Text Right to Left</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:9,1">XLS Text Shrink</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:9,3">XLS Text Left to Right</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:10">XLS Border Styles</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:10,16">XLS Border Diagonal Up</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,1">XLS Border None</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,2">XLS Border Thin</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,11">XLS Border Dash Dotted 2</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,15">XLS Border Diagonal Down</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,12">XLS Border Dash Dot Dotted 1</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,13">XLS Border Dash Dot Dotted 2</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,14">XLS Border Dash Dot Dotted 3</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,3">XLS Border Medium</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,4">XLS Border Dashed</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,5">XLS Border Dotted</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,6">XLS Border Thick</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,7">XLS Border Double</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,8">XLS Border Hair</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,9">XLS Border Dashed</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:10,10">XLS Border Dash Dotted 1</a>
+</dd>
+</dl>
+<p>
+<a target="content" href="./content.html#constant:11">XLS Font Alignment</a>
+</p>
+<dl>
+<dd>
+<a target="content" href="./content.html#constant:11,1">XLS H Align General</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,8">XLS V Align Top</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,2">XLS H Align Left</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,13">XLS Justify Last Line</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,9">XLS V Align Centered</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,3">XLS H Align Centered</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,4">XLS H Align Right</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,10">XLS V Align Bottom</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,5">XLS H Align Filled</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,11">XLS V Align Justified</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,6">XLS H Align Justified</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,7">XLS H Align Sel Centered</a>
+</dd>
+<dd>
+<a target="content" href="./content.html#constant:11,12">XLS V Align Distributed</a>
+</dd>
+</dl>
+</body>
+</html>
