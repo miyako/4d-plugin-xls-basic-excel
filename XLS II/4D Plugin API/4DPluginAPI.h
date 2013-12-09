@@ -22,18 +22,20 @@
 #endif
 
 #include "C_TEXT.h"
-//#include "C_INTEGER.h"
+#include "C_INTEGER.h"
 #include "C_LONGINT.h"
-//#include "C_TIME.h"
-//#include "C_DATE.h"
+#include "C_TIME.h"
+#include "C_DATE.h"
 #include "C_REAL.h"
-//#include "C_BLOB.h"
-//#include "C_PICTURE.h"
+#include "C_BLOB.h"
+#include "C_PICTURE.h"
+#include "C_POINTER.h"
 
-//#include "ARRAY_TEXT.h"
-//#include "ARRAY_INTEGER.h"
-//#include "ARRAY_LONGINT.h"
-//#include "ARRAY_REAL.h"
+#include "ARRAY_TEXT.h"
+#include "ARRAY_INTEGER.h"
+#include "ARRAY_LONGINT.h"
+#include "ARRAY_REAL.h"
+#include "ARRAY_BOOLEAN.h"
 
 //some external libraries assume first load; include this file after them 
 #if VERSIONWIN
@@ -457,6 +459,7 @@ PA_AreaEvent	PA_GetAreaEvent   ( PA_PluginParameters params );
 PA_Rect			PA_GetAreaRect    ( PA_PluginParameters params );
 PA_Unistring*   PA_GetAreaName    ( PA_PluginParameters params );
 void    PA_GetPluginProperties    ( PA_PluginParameters params, PA_PluginProperties* properties );
+// If PA_GetPluginProperties needed please call it first.
 void    PA_SetAreaReference       ( PA_PluginParameters params, void* ref );
 void*   PA_GetAreaReference       ( PA_PluginParameters params );
 void    PA_SetAreaFocusable       ( PA_PluginParameters params, char focusable );
@@ -480,8 +483,16 @@ void	PA_GotoNextField          ( PA_PluginParameters params );
 void	PA_GotoPreviousField      ( PA_PluginParameters params );
 void	PA_GetPageChange          ( PA_PluginParameters params, short *pageFrom, short *pageTo );
 void	PA_RequestRedraw          ( PA_PluginParameters params );
+void	PA_RedrawArea	          ( PA_PluginParameters params, char inNow,PA_Rect* inRect);
+PA_Rect	PA_GetAreaPortBounds	  ( PA_PluginParameters params);
 
+// ---------------------------------------------------------------
+// CGContext tools
+// ---------------------------------------------------------------
 
+void PA_UseQuartzAxis( PA_PluginParameters params, short *outAreaX, short *outAreaY, short* outAreaWidth, short *outAreaHeight);
+void PA_UseQuickdrawAxis( PA_PluginParameters params, short *outAreaX, short *outAreaY, short* outAreaWidth, short *outAreaHeight);
+	
 // -----------------------------------------------------
 // manage dropping events on a plugin area
 // -----------------------------------------------------
@@ -597,25 +608,31 @@ void  PA_ResizeArray        ( PA_Variable* ar, unsigned int nb );//miyako; array
 long  PA_GetArrayCurrent    ( PA_Variable ar );
 void  PA_SetArrayCurrent    ( PA_Variable* ar, long current );
 
+char  PA_IsArrayVariable	( PA_Variable* ar );
+	
 // Reading values on arrays
 short        PA_GetIntegerInArray ( PA_Variable ar, long i );
 long         PA_GetLongintInArray ( PA_Variable ar, long i );
 double       PA_GetRealInArray    ( PA_Variable ar, long i );
 void         PA_GetDateInArray    ( PA_Variable ar, long i, short* day, short* month, short* year );
+long		 PA_GetTimeInArray	  ( PA_Variable ar, long i );
 PA_Picture   PA_GetPictureInArray ( PA_Variable ar, long i );
 PA_Unistring PA_GetStringInArray  ( PA_Variable ar, long i );
 char         PA_GetBooleanInArray ( PA_Variable ar, long i );
+PA_Blob      PA_GetBlobInArray    ( PA_Variable ar, long i );
 PA_Variable  PA_GetArrayInArray   ( PA_Variable ar, long i );
 PointerBlock PA_GetPointerInArray ( PA_Variable ar, long i );
 
 // Setting values on arrays
 void PA_SetIntegerInArray   ( PA_Variable ar, long i, short value );
 void PA_SetLongintInArray   ( PA_Variable ar, long i, long value  );
+void PA_SetTimeInArray      ( PA_Variable ar, long i, long inMilliseconds  );
 void PA_SetRealInArray      ( PA_Variable ar, long i, double value );
 void PA_SetDateInArray      ( PA_Variable ar, long i, short day, short month, short year );
 void PA_SetStringInArray    ( PA_Variable ar, long i, PA_Unistring* ustr );
 void PA_SetPictureInArray   ( PA_Variable ar, long i, PA_Picture picture );
 void PA_SetBooleanInArray   ( PA_Variable ar, long i, char value );
+void PA_SetBlobInArray      ( PA_Variable ar, long i, PA_Blob value );
 void PA_SetArrayInArray     ( PA_Variable ar, long i, PA_Variable value );
 void PA_SetPointerInArray   ( PA_Variable ar, long i, PointerBlock value );
 
@@ -801,8 +818,8 @@ void         PA_SetWindowFocused ( PA_WindowRef windowRef );
 char         PA_IsWindowFocused  ( PA_WindowRef windowRef );
 
 void  PA_UpdateVariables       ( );
-long  PA_GetHWND               ( PA_WindowRef windowRef );
-long  PA_GetWindowPtr          ( PA_WindowRef windowRef );
+sLONG_PTR  PA_GetHWND               ( PA_WindowRef windowRef );
+sLONG_PTR  PA_GetWindowPtr          ( PA_WindowRef windowRef );
 void  PA_ClosePluginWindow     ( PA_PluginRef pluginRef );
 void  PA_SetPluginWindowTitle  ( PA_PluginRef pluginRef, PA_Unichar* windowTitle );
 void  PA_SetPluginAreaClipMode ( PA_PluginRef pluginRef, char clipChildren );

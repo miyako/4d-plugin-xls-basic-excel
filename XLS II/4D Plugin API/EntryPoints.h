@@ -377,4 +377,6 @@
 #define  EX_MODIFY_METHOD							-672	// PA_ModifyMethod
 	// -673,-674 reserved
 #define  EX_CONVERT_CHARSET_TO_CHARSET				-675	// PA_ConvertFromCharset	March 2nd 2009   11.3
+#define  EX_REDRAW_AREA								-714	// PA_RedrawArea (14.0)
+#define  EX_GET_AREA_PORT_BOUNDS					-715	// PA_GetAreaPortBounds (14.0)
 #endif

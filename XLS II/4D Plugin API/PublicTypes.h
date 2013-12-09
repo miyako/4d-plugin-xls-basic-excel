@@ -159,7 +159,7 @@ typedef PluginBlock* PA_PluginParameters;
 typedef struct PA_Event
 {
 	short			fWhat;
-	long			fMessage;
+	sLONG_PTR		fMessage;
 	long			fWhen;
 	short			fWhereV;
 	short			fWhereH;
@@ -391,7 +391,7 @@ typedef struct PA_ReadWriteBlock
    unsigned long	fDataType;
    short			fDataID;
    long				fDataSize;
-   long				fPackID;
+   sLONG_PTR		fPackID;
    long				fProcessID;
 } PA_ReadWriteBlock;
 
@@ -750,7 +750,9 @@ typedef enum
   eFK_IntegerField		= 8,	//  Integer field (-32768..32767)
   eFK_LongintField		= 9,	//  Long Integer field (-2^31..(2^31)-1)
   eFK_TimeField			= 11,	//	Time field
-  eFK_BlobField			= 30	//	Blob field
+  eFK_Long8				= 25,	
+  eFK_BlobField			= 30,	//	Blob field
+  eFK_FloatField		= 35	//  Float	
 } PA_FieldKind;
 
 
@@ -795,6 +797,8 @@ typedef enum
 	eVK_ArrayBoolean	= 22,	// One dimension array declared using ARRAY BOOLEAN
 	eVK_Pointer			= 23,	// Variable declared using C_POINTER
 	eVK_Blob			= 30,	// Variable declared using C_BLOB
+	eVK_ArrayBlob		= 31,	// One dimension array declared using ARRAY BLOB
+	eVK_ArrayTime		= 32,	// One dimension array declared using ARRAY TIME	
 	eVK_Unistring		= 33,	// Variable declared using C_STRING or C_TEXT
 	eVK_ArrayUnicode	= 34	// One Dimension array declared using ARRAY STRING or ARRAY TEXT
 } PA_VariableKind;

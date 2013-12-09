@@ -37,72 +37,11 @@ FOURDCALL FourDPackex( long selector, void *parameters, void **data, void *resul
 	{
 		// get the callback address
 		gCall4D = ( (PackInitBlock*)parameters )->fCall4Dex;
-		( (PackInitBlock*)parameters )->fSupportedVersion = 0x00000660;
+		( (PackInitBlock*)parameters )->fSupportedVersion = 0x00001400;
 	}
 
 	// Call "PluginMain" provided by the user of the 4DPluginAPI
 	PluginMain( selector, &params );
-}
-
-void PA_ConvertToUTF8(const CUTF16String *fromString, CUTF8String* toString)
-{
-	uint32_t size = ((uint32_t)fromString->length() * 4) + sizeof(uint8_t);
-	std::vector<uint8_t> buf(size);
-	
-	uint32_t len = PA_ConvertCharsetToCharset(
-											  (char *)fromString->c_str(),
-											  (uint32_t)fromString->length() * sizeof(PA_Unichar),
-											  eVTC_UTF_16,
-											  (char *)&buf[0],
-											  size,
-											  eVTC_UTF_8
-											  );
-	
-	*toString = CUTF8String((const uint8_t *)&buf[0], len);
-}
-
-void PA_ConvertToUTF8(const PA_Unistring *fromString, CUTF8String* toString)
-{
-	CUTF16String ustring;
-	ustring = CUTF16String(fromString->fString, fromString->fLength);
-	PA_ConvertToUTF8(&ustring, toString);
-}
-
-void PA_ConvertFromUTF8(const CUTF8String *fromString, CUTF16String* toString)
-{
-	uint32_t size = ((uint32_t)fromString->length() * sizeof(PA_Unichar)) + sizeof(PA_Unichar);
-	std::vector<uint8_t> buf(size);
-	
-	uint32_t len = PA_ConvertCharsetToCharset(
-											  (char *)fromString->c_str(),
-											  (uint32_t)fromString->length(),
-											  eVTC_UTF_8,
-											  (char *)&buf[0],
-											  size,
-											  eVTC_UTF_16
-											  );
-	
-	*toString = CUTF16String((const PA_Unichar *)&buf[0], len);	
-}
-
-void PA_ConvertFromUTF8(const CUTF8String *fromString, PA_Unistring* toString)
-{
-	CUTF16String ustring;
-	PA_ConvertFromUTF8(fromString, &ustring);	
-	PA_SetUnistring(toString, (PA_Unichar *)ustring.c_str());
-}
-
-void PA_GetDatabaseFolderPath(CUTF16String *path)
-{
-	PA_Unistring p = PA_Get4Dfolder((PA_FolderKind)4, 0);
-	*path = CUTF16String(p.fString, p.fLength);
-}
-
-void PA_GetDatabaseFolderPath(CUTF8String *path)
-{
-	CUTF16String u;
-	PA_GetDatabaseFolderPath(&u);
-	PA_ConvertToUTF8(&u, path);
 }
 
 // -----------------------------------------
@@ -1494,6 +1433,7 @@ void PA_GetPointerValueProperties( PA_Pointer inPointer, PA_VariableKind* outKin
 				break;
 
 			case eFK_RealField:
+			case eFK_FloatField:
 				*outKind=eVK_Real;
 				break;
 
@@ -1514,6 +1454,7 @@ void PA_GetPointerValueProperties( PA_Pointer inPointer, PA_VariableKind* outKin
 				break;
 
 			case eFK_LongintField:
+			case eFK_Long8:
 				*outKind=eVK_Longint;
 				break;
 
@@ -2267,9 +2208,11 @@ void PA_SetVariableParameter( PA_PluginParameters params, short index, PA_Variab
 		case eVK_ArrayLongint:
 		case eVK_ArrayDate:
 		case eVK_ArrayPicture:
+		case eVK_ArrayBlob:
 		case eVK_ArrayPointer:
 		case eVK_ArrayBoolean:
 		case eVK_ArrayUnicode:
+		case eVK_ArrayTime:
 			paramPtr->uValue.fArray.fCurrent = variable.uValue.fArray.fCurrent;
 			paramPtr->uValue.fArray.fNbElements = variable.uValue.fArray.fNbElements;
 			paramPtr->uValue.fArray.fData = variable.uValue.fArray.fData;
@@ -2402,8 +2345,15 @@ void PA_GetPluginProperties( PA_PluginParameters params, PA_PluginProperties* pr
 	else if ( ev->fWhat == eAE_DesignUpdate )
 	{
 		sErrorCode = eER_NoErr;
+#if PA_64BITS_ARCHITECTURE
+		// In x64 arch you can't call PA_CustomizeDesignMode before PA_GetPluginProperties
+		if ( properties && ev->fMessage )
+			*properties = *(PA_PluginProperties*)( ev->fMessage );
+		ev->fMessage = 0;  // fMessage used out of here. x64 MUST call PA_GetPluginProperties.
+#else
 		if ( properties && ev->fWhen )
 			*properties = *(PA_PluginProperties*)( ev->fWhen );
+#endif		
 	}
 	else if ( ev->fWhat == eAE_EditAdvancedProperties )
 	{
@@ -2931,6 +2881,7 @@ char PA_GetKey( PA_PluginParameters params, PA_Unichar* unichar, PA_KeyCode* key
 
 // to be called if AreaEvent == eAE_DesignUpdate 
 // if you want to draw yourself your plugin in design mode
+// In x64 arch you can't call PA_CustomizeDesignMode before PA_GetPluginProperties, it scatches the fMessage pointer on the PluginProperties.
 void PA_CustomizeDesignMode( PA_PluginParameters params )
 {
 	PA_Event* ev;
@@ -3153,6 +3104,57 @@ void PA_RequestRedraw( PA_PluginParameters params )
 	}
 	else
 		sErrorCode = eER_BadEventCall;
+}
+
+// to called during eAE_UpdateEvent only
+// will invalidate whole or a part of the plugin area
+// if inNow is 1, the area will be receveive an update event during this call
+// v14 or higher
+void	PA_RedrawArea ( PA_PluginParameters params, char inNow,PA_Rect* inRect)
+{
+	PA_Event* ev;
+	
+	ev = ( (PA_Event**) params->fParameters )[ 0 ];
+	
+	if ( ev->fWhat != eAE_Update && ev->fWhat != eAE_Scroll)
+	{
+		EngineBlock	eb;
+		eb.fHandle = (PA_Handle)PA_GetAreaReference(params);
+		eb.fParam1 = inNow ;
+		eb.fParam2 = (sLONG_PTR) inRect;
+		Call4D( EX_REDRAW_AREA, &eb );
+	}
+	else
+	{
+		sErrorCode = eER_BadEventCall;
+	}
+}
+
+// to called during eAE_UpdateEvent only 
+// return the bounds of the graphic port that host the plug in area
+// needed to swap CGContext axis
+// v14 or higher
+
+PA_Rect	PA_GetAreaPortBounds ( PA_PluginParameters params)
+{
+	PA_Rect result;
+	if(PA_GetAreaEvent(params)==eAE_DesignUpdate)
+	{
+		PA_Rect designBounds = PA_GetAreaRect( params );
+		result.fLeft = 0;
+		result.fTop = 0;
+		result.fRight = designBounds.fRight - designBounds.fLeft;
+		result.fBottom = designBounds.fBottom - designBounds.fTop;
+	}
+	else 
+	{
+		
+		EngineBlock	eb;
+		eb.fHandle = (PA_Handle)PA_GetAreaReference(params);
+		eb.fParam1 = (sLONG_PTR) &result ;
+		Call4D( EX_GET_AREA_PORT_BOUNDS, &eb );
+	}
+	return result;
 }
 
 // -----------------------------------------
@@ -3580,6 +3582,7 @@ PA_Variable PA_CreateVariable( PA_VariableKind kind )
 			break;
 
 		case eVK_ArrayLongint :
+		case eVK_ArrayTime :
 			variable.uValue.fArray.fCurrent = 0;
 			variable.uValue.fArray.fData = PA_NewHandle( sizeof( long ) );
 			variable.uValue.fArray.fNbElements = 0;
@@ -3610,6 +3613,20 @@ PA_Variable PA_CreateVariable( PA_VariableKind kind )
 			pt = PA_LockHandle( variable.uValue.fArray.fData );
 			if ( pt )
 				*(PA_Picture*) pt  = PA_CreatePicture( 0, 0 );
+			PA_UnlockHandle( variable.uValue.fArray.fData );
+			break;
+			
+		case eVK_ArrayBlob :
+			variable.uValue.fArray.fCurrent = 0;
+			variable.uValue.fArray.fData = PA_NewHandle( sizeof( PA_Blob ) );
+			variable.uValue.fArray.fNbElements = 0;
+			pt = PA_LockHandle( variable.uValue.fArray.fData );
+			if ( pt )
+			{
+				PA_Blob* blobby=(PA_Blob*)pt;
+				blobby->fHandle=0;
+				blobby->fSize=0;
+			}
 			PA_UnlockHandle( variable.uValue.fArray.fData );
 			break;
 
@@ -3954,7 +3971,7 @@ void PA_ClearVariable( PA_Variable* variable )
 
 long PA_GetArrayNbElements( PA_Variable ar )
 {
-	if ( ( ar.fType >= eVK_ArrayOfArray && ar.fType <= eVK_ArrayBoolean ) || ar.fType == eVK_ArrayUnicode )
+	if ( PA_IsArrayVariable(&ar) )
 		return ar.uValue.fArray.fNbElements;
 	else
 		return -1;
@@ -3977,7 +3994,7 @@ void PA_ResizeArray( PA_Variable *ar, unsigned int nb )
 	PA_ArrayVariable	*ptArray;
 
 	if (    nb >= 0 
-		 && ( ( ar->fType >= eVK_ArrayOfArray && ar->fType <= eVK_ArrayBoolean ) || ar->fType == eVK_ArrayUnicode )
+		 && ( PA_IsArrayVariable(ar) )
 		 && (unsigned int)ar->uValue.fArray.fNbElements != nb
 		 && ar->uValue.fArray.fData
 	   )
@@ -3988,7 +4005,7 @@ void PA_ResizeArray( PA_Variable *ar, unsigned int nb )
 			case eVK_ArrayOfArray :
 				// dispose in memory arrays that will be removed
 				// if array become smaller
-				if ( nb < (unsigned int)ar->uValue.fArray.fNbElements )
+				if ( (int)nb < ar->uValue.fArray.fNbElements )
 				{
 					ptArray = (PA_ArrayVariable*) PA_LockHandle( ar->uValue.fArray.fData );
 
@@ -4012,6 +4029,7 @@ void PA_ResizeArray( PA_Variable *ar, unsigned int nb )
 				break;
 
 			case eVK_ArrayLongint :
+			case eVK_ArrayTime :
 				size = nb1 * (long) sizeof( long );
 				oldSize = oldCount * (long) sizeof( long );
 				break;
@@ -4024,11 +4042,11 @@ void PA_ResizeArray( PA_Variable *ar, unsigned int nb )
 			case eVK_ArrayPicture :
 				// dispose in memory picture handles that will be removed
 				// if array become smaller
-				if ( nb < (unsigned int)ar->uValue.fArray.fNbElements )
+				if ( (int)nb < ar->uValue.fArray.fNbElements )
 				{
 					ptPictureHandle = (PA_Picture*) PA_LockHandle( ar->uValue.fArray.fData );
 
-					for ( i = nb + 1; i <= (unsigned int)ar->uValue.fArray.fNbElements; i++ )
+					for ( i = nb + 1; (int)i <= ar->uValue.fArray.fNbElements; i++ )
 						PA_DisposePicture( ptPictureHandle[ i ] );
 						
 					PA_UnlockHandle( ar->uValue.fArray.fData );
@@ -4036,6 +4054,24 @@ void PA_ResizeArray( PA_Variable *ar, unsigned int nb )
 				size = nb1 * (long) sizeof( PA_Handle );
 				oldSize = oldCount * (long) sizeof( PA_Handle );
 				break;
+				
+			case eVK_ArrayBlob :
+				// dispose in memory picture handles that will be removed
+				// if array become smaller
+				if ( (int)nb < ar->uValue.fArray.fNbElements )
+				{
+					PA_Blob** ptBlobHandle = (PA_Blob**) PA_LockHandle( ar->uValue.fArray.fData );
+					
+					for ( i = nb + 1; (int)i <= ar->uValue.fArray.fNbElements; i++ )
+					{
+						PA_DisposeHandle(ptBlobHandle[i]->fHandle);
+					}
+					
+					PA_UnlockHandle( ar->uValue.fArray.fData );
+				}
+				size = nb1 * (long) sizeof( PA_Handle );
+				oldSize = oldCount * (long) sizeof( PA_Handle );
+				break;	
 
 			case eVK_ArrayUnicode :
 				// dispose in memory strings that will be removed
@@ -4108,12 +4144,36 @@ void PA_ResizeArray( PA_Variable *ar, unsigned int nb )
 
 long PA_GetArrayCurrent( PA_Variable ar )
 {
-	if ( ( ar.fType >= eVK_ArrayOfArray && ar.fType <= eVK_ArrayBoolean ) || ar.fType == eVK_ArrayUnicode )
+	if ( PA_IsArrayVariable(&ar) )
 		return ar.uValue.fArray.fCurrent;
 	else
 		return -1;
 }
 
+char  PA_IsArrayVariable( PA_Variable* ar )
+{
+	char isArray=0;
+	if (ar != NULL)
+	{
+		switch(ar->fType)
+		{
+			case eVK_ArrayOfArray:
+			case eVK_ArrayReal:
+			case eVK_ArrayInteger:
+			case eVK_ArrayLongint:
+			case eVK_ArrayDate:
+			case eVK_ArrayPicture:
+			case eVK_ArrayPointer:
+			case eVK_ArrayBoolean:
+			case eVK_ArrayBlob:
+			case eVK_ArrayTime:
+			case eVK_ArrayUnicode:
+				isArray=-1;
+				break;
+		}
+	}
+	return isArray;
+}
 
 void PA_SetArrayCurrent( PA_Variable* ar, long current )
 {
@@ -4140,14 +4200,31 @@ long PA_GetLongintInArray( PA_Variable ar, long i )
 {
 	long value = 0;
 	
-	if (	ar.fType == eVK_ArrayLongint
-		 && ar.uValue.fArray.fData  
-		 && i >= 0
-		 && i <= ar.uValue.fArray.fNbElements
-	   )
-		value = ( * (long**) (ar.uValue.fArray.fData) )[i];
+	switch(ar.fType)
+	{
+		case eVK_ArrayLongint:
+		case eVK_ArrayTime:
+			if (ar.uValue.fArray.fData && i >= 0 && i <= ar.uValue.fArray.fNbElements)
+				value = ( * (long**) (ar.uValue.fArray.fData) )[i];
+			break;
+	}
 	
 	return value;
+}
+
+
+long PA_GetTimeInArray( PA_Variable ar, long i )
+{
+	long retMilliseconds = 0;
+	
+	if (	ar.fType == eVK_ArrayTime
+		&& ar.uValue.fArray.fData  
+		&& i >= 0
+		&& i <= ar.uValue.fArray.fNbElements
+		)
+		retMilliseconds = ( * (long**) (ar.uValue.fArray.fData) )[i];
+	
+	return retMilliseconds;
 }
 
 
@@ -4227,6 +4304,20 @@ PA_Picture PA_GetPictureInArray( PA_Variable ar, long i )
 	return picture;
 }
 
+PA_Blob PA_GetBlobInArray( PA_Variable ar, long i )
+{
+	PA_Blob retBlob = {0,0};
+	
+	if (	ar.fType == eVK_ArrayBlob 
+		&& ar.uValue.fArray.fData
+		&& i >= 0
+		&& i <= ar.uValue.fArray.fNbElements
+		)
+	{
+		retBlob = ( * (PA_Blob**) ar.uValue.fArray.fData ) [ i ];
+	}
+	return retBlob;
+}
 
 static unsigned char tabTrue [ 8 ] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 static unsigned char tabFalse[ 8 ] = { 0xFE, 0xFD, 0xFB, 0xF7, 0xEF, 0xDF, 0xBF, 0x7F };
@@ -4307,14 +4398,26 @@ void PA_SetIntegerInArray( PA_Variable ar, long i, short value )
 }
 
 
-void PA_SetLongintInArray( PA_Variable ar, long i, long value )
+void PA_SetLongintInArray( PA_Variable ar, long i, long value ) 
 {
-	if (	ar.fType == eVK_ArrayLongint 
-		 && ar.uValue.fArray.fData 
-		 && i >= 0
-		 && i <= ar.uValue.fArray.fNbElements
-	   )
-		( * (long**) (ar.uValue.fArray.fData) )[i] = value;
+	switch(ar.fType)
+	{
+		case eVK_ArrayLongint:
+		case eVK_ArrayTime:
+			if (ar.uValue.fArray.fData && i >= 0 && i <= ar.uValue.fArray.fNbElements)
+				( * (long**) (ar.uValue.fArray.fData) )[i] = value;
+	}
+}
+
+
+void PA_SetTimeInArray( PA_Variable ar, long i, long inMilliseconds ) 
+{
+	switch(ar.fType)
+	{
+		case eVK_ArrayTime:
+			if (ar.uValue.fArray.fData && i >= 0 && i <= ar.uValue.fArray.fNbElements)
+				( * (long**) (ar.uValue.fArray.fData) )[i] = inMilliseconds;
+	}
 }
 
 
@@ -4387,6 +4490,31 @@ void PA_SetPictureInArray( PA_Variable ar, long i, PA_Picture picture )
 		*pth = picture;
 
 		PA_UnlockHandle( ar.uValue.fArray.fData );
+	}
+}
+
+
+void PA_SetBlobInArray( PA_Variable ar, long inIndex, PA_Blob blob )
+{
+	if (	ar.fType == eVK_ArrayBlob 
+		&& ar.uValue.fArray.fData
+		&& inIndex >= 0
+		&& inIndex <= ar.uValue.fArray.fNbElements
+		)
+	{
+		// lock the array handle and get a pointer on the element
+		PA_Blob* blobby = (PA_Blob*) PA_LockHandle(ar.uValue.fArray.fData);
+		blobby+=inIndex;
+		
+		// remove handle
+		if ( blobby->fHandle )
+			PA_DisposeHandle(blobby->fHandle);
+		
+		// Set the blob
+		blobby->fHandle=blob.fHandle;
+		blobby->fSize=blob.fSize;
+		
+		PA_UnlockHandle(ar.uValue.fArray.fData);
 	}
 }
 
@@ -6472,22 +6600,22 @@ void PA_UpdateVariables()
 // on Windows, this command can convert a 4D window reference
 // into a Windows regular HWND.
 // if you pass 0, return current window HWND
-long PA_GetHWND( PA_WindowRef windowRef )
+sLONG_PTR PA_GetHWND( PA_WindowRef windowRef )
 {
 	EngineBlock eb;
 	eb.fHandle = (PA_Handle) windowRef;
 	eb.fError  = 0;
 	Call4D( EX_GET_HWND, &eb );
 	sErrorCode = (PA_ErrorCode) eb.fError;
-	return (long) eb.fHandle;
+	return (sLONG_PTR)eb.fHandle;
 }
 
 
 // on Macintosh, this command can convert a 4D window reference
 // into a Macintosh regular WindowPtr
-long PA_GetWindowPtr( PA_WindowRef windowRef )
+sLONG_PTR PA_GetWindowPtr( PA_WindowRef windowRef )
 {
-	return (long) windowRef;
+	return (sLONG_PTR)windowRef;
 }
 
 
@@ -6584,7 +6712,7 @@ PA_WindowRef PA_NewWindow( PA_Rect rect, PA_WindowLevel level, short kind, PA_Un
 	eb.fParam1 = (long) level;
 	Call4D( EX_NEXT_WINDOW_LEVEL, &eb );
 	
-	eb.fParam1 = (long) &rect;
+	eb.fParam1 = (sLONG_PTR) &rect;
 	PA_CopyUnichars( title, eb.fUName, sizeof(eb.fUName) );
 	eb.fParam2 = (long) kind;
 	eb.fParam3 = (char) closeBox;
@@ -6678,7 +6806,7 @@ void PA_CreateTip( PA_Unistring* ustr, char useRTF, short posX, short posY, PA_R
 	EngineBlock eb;
 
 	eb.fUniString1 = *ustr;
-	eb.fParam1 = (long) &rect;
+	eb.fParam1 = (sLONG_PTR) &rect;
 	eb.fParam2 = useRTF;
 	eb.fParam3 = posX;
 	eb.fParam4 = posY;
@@ -7108,7 +7236,7 @@ PA_Dial4D PA_OpenDialog( PA_Dial4D dialog, PA_Unichar* dialogName, PA_Unichar* w
 	eb.fLongint = '6565';
 	eb.fOneToMany = 0;	// hidden
 	eb.fManyToOne = closeBox;
-	eb.fParam2 = (long) & rect;
+	eb.fParam2 = (sLONG_PTR) & rect;
 	eb.fParam3 = eWL_Dialog;	// PA_WindowLevel
 	eb.fShort = 1;	// modal
 
@@ -7127,7 +7255,7 @@ char PA_ModalDialog( PA_Dial4D dialog, PA_Unichar* variableName )
 	EngineBlock eb;
 	char val = 0;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = 0;
 	eb.fParam3 = sBinaryFormat;
 	
@@ -7148,7 +7276,7 @@ void PA_CloseDialog( PA_Dial4D dialog )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_CLOSE_DIALOG, &eb );
 	sErrorCode = eER_NoErr;
 }
@@ -7158,7 +7286,7 @@ void PA_Dial4DSetEnable( PA_Dial4D dialog, PA_Unichar* variable, char enabled )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fManyToOne = enabled;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_ENABLE, &eb );
@@ -7171,7 +7299,7 @@ PA_Variable PA_Dial4DGetVariable( PA_Dial4D dialog, PA_Unichar* variable )
 	EngineBlock eb;
 	PA_Variable var;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fHandle = (PA_Handle) &var;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_VARIABLE, &eb );
@@ -7184,7 +7312,7 @@ void PA_Dial4DSetVariable( PA_Dial4D dialog, PA_Unichar* variable, PA_Variable v
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fHandle = (PA_Handle) &var;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_VARIABLE, &eb );
@@ -7196,7 +7324,7 @@ long PA_Dial4DGetLong( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fLongint = 0;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_LONG, &eb );
@@ -7209,7 +7337,7 @@ void PA_Dial4DSetLong( PA_Dial4D dialog, PA_Unichar* variable, long value )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fLongint = value;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_LONG, &eb );
@@ -7221,7 +7349,7 @@ double PA_Dial4DGetReal( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fReal = 0.0;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_REAL, &eb );
@@ -7234,7 +7362,7 @@ void PA_Dial4DSetReal( PA_Dial4D dialog, PA_Unichar* variable, double value )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fReal = value;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_REAL, &eb );
@@ -7246,7 +7374,7 @@ void PA_Dial4DGetString( PA_Dial4D dialog, PA_Unichar* variable, PA_Unichar* str
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fName[0] = 0;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_STRING, &eb );
@@ -7259,7 +7387,7 @@ void PA_Dial4DSetString( PA_Dial4D dialog, PA_Unichar* variable, PA_Unichar* str
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( string, eb.fUName, sizeof(eb.fUName) );
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_STRING, &eb );
@@ -7270,7 +7398,7 @@ PA_Unistring PA_Dial4DGetText( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fName[0] = 0;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_TEXT, &eb );
@@ -7284,7 +7412,7 @@ void PA_Dial4DSetText( PA_Dial4D dialog, PA_Unichar* variable, PA_Unistring* ust
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fUniString1 = *ustr;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_TEXT, &eb );
@@ -7296,7 +7424,7 @@ void PA_Dial4DSetPicture( PA_Dial4D dialog, PA_Unichar* variable, PA_Picture pic
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fPicture = picture;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_PICTURE, &eb );
@@ -7310,7 +7438,7 @@ void* PA_Dial4DSaveVariables( PA_Dial4D dialog )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = 0;
 	Call4D( EX_DIAL4D_SAVE_VARIABLES, &eb );
 	sErrorCode = eER_NoErr;
@@ -7323,8 +7451,8 @@ void PA_Dial4DRestoreVariables( PA_Dial4D dialog, void* env )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
-	eb.fParam2 = (long) env;
+	eb.fParam1 = (sLONG_PTR) dialog;
+	eb.fParam2 = (sLONG_PTR) env;
 	Call4D( EX_DIAL4D_RESTORE_VARIABLES, &eb );
 	sErrorCode = eER_NoErr;
 }
@@ -7334,7 +7462,7 @@ double PA_Dial4DGetArrayReal( PA_Dial4D dialog, PA_Unichar* variable, long indic
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = indice;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_ARRAY_REAL, &eb );
@@ -7348,7 +7476,7 @@ void PA_Dial4DGetArrayString( PA_Dial4D dialog, PA_Unichar* variable, PA_Unichar
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = indice;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_ARRAY_STRING, &eb );
@@ -7361,7 +7489,7 @@ long PA_Dial4DGetArrayLong( PA_Dial4D dialog, PA_Unichar* variable, long indice 
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = indice;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_ARRAY_LONG, &eb );
@@ -7374,7 +7502,7 @@ void PA_Dial4DSetAreaHandler( PA_Dial4D dialog, PA_Unichar* variable, void* hand
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = 6642;
 	eb.fParam3 = sBinaryFormat;
 	eb.fHandle = (PA_Handle) privateData;
@@ -7394,8 +7522,8 @@ void PA_Dial4DGetVariableRect( PA_Dial4D dialog, PA_Unichar* variable, PA_Rect* 
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
-	eb.fParam2 = (long) rect;
+	eb.fParam1 = (sLONG_PTR) dialog;
+	eb.fParam2 = (sLONG_PTR) rect;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_VARIABLE_RECT, &eb );
 	sErrorCode = eER_NoErr;
@@ -7406,7 +7534,7 @@ void PA_Dial4DSetArrayTextFromResource( PA_Dial4D dialog, PA_Unichar* variable, 
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = 'STR#';	// also supported : 'TXT#' and 'MENU'
 	eb.fParam3 = (long) resourceID;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7419,7 +7547,7 @@ void PA_Dial4DSetArrayTextFromTableList( PA_Dial4D dialog, PA_Unichar* variable 
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam4 = sVirtualStructureMode;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_ARRAY_TEXT_FROM_TABLE_LIST, &eb );
@@ -7431,7 +7559,7 @@ void PA_Dial4DSetArrayTextFromFieldList( PA_Dial4D dialog, PA_Unichar* variable,
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = 0;
 	eb.fParam4 = sVirtualStructureMode;
 	eb.fTable = table;
@@ -7446,7 +7574,7 @@ void PA_Dial4DBeginUpdateVariables( PA_Dial4D dialog )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_BEGIN_UPDATE_VARIABLES, &eb );
 	sErrorCode = eER_NoErr;
 }
@@ -7458,7 +7586,7 @@ void PA_Dial4DEndUpdateVariables( PA_Dial4D dialog )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_END_UPDATE_VARIABLES, &eb );
 	sErrorCode = eER_NoErr;
 }
@@ -7468,7 +7596,7 @@ void PA_Dial4DNewArrayString( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_NEW_ARRAY_STRING, &eb );
 	sErrorCode = eER_NoErr;
@@ -7479,7 +7607,7 @@ void PA_Dial4DSetArrayString( PA_Dial4D dialog, PA_Unichar* variable, PA_Unichar
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = position;
 	PA_CopyUnichars( string, eb.fUName, sizeof(eb.fUName) );
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7492,7 +7620,7 @@ void PA_Dial4DSetDate( PA_Dial4D dialog, PA_Unichar* variable, short day, short 
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fDate.fDay   = day;
 	eb.fDate.fMonth = month;
 	eb.fDate.fYear  = year;
@@ -7506,7 +7634,7 @@ void PA_Dial4DGetDate( PA_Dial4D dialog, PA_Unichar* variable, short* day, short
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_DATE, &eb );
 	sErrorCode = eER_NoErr;
@@ -7526,7 +7654,7 @@ void PA_Dial4DShowHideVariable( PA_Dial4D dialog, PA_Unichar* variable, char vis
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = (long) visible;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SHOW_HIDE_VARIABLE, &eb );
@@ -7538,7 +7666,7 @@ void PA_Dial4DGotoPage( PA_Dial4D dialog, short page )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = (long) page;
 	Call4D( EX_DIAL4D_GOTO_PAGE, &eb );
 	sErrorCode = eER_NoErr;
@@ -7549,7 +7677,7 @@ short PA_Dial4DGetCurrentPage( PA_Dial4D dialog )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_GET_CURRENT_PAGE, &eb );
 	sErrorCode = eER_NoErr;
 
@@ -7563,7 +7691,7 @@ void PA_Dial4DNewTableFieldHList( PA_Dial4D dialog, PA_Unichar* variable, short 
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fManyToOne = showRelatedFields;	// only if table > 0
 	eb.fField  = showRelatedTables;
 	eb.fParam2 = 0;
@@ -7581,7 +7709,7 @@ void PA_Dial4DDisposeHList( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_DISPOSE_HLIST, &eb );
 	sErrorCode = eER_NoErr;
@@ -7595,7 +7723,7 @@ void PA_Dial4DGetDragInfo( PA_Dial4D dialog,
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_GET_DRAG_INFO, &eb );
 	sErrorCode = eER_NoErr;
 	
@@ -7624,7 +7752,7 @@ void PA_Dial4DGetTableFieldHListCurrent( PA_Dial4D dialog, PA_Unichar* variable,
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam4 = sVirtualStructureMode;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_TABLE_FIELD_HLIST_CURRENT, &eb );
@@ -7642,7 +7770,7 @@ void PA_Dial4DNewArrayLong( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_NEW_ARRAY_LONG, &eb );
 	sErrorCode = eER_NoErr;
@@ -7653,7 +7781,7 @@ void PA_Dial4DSetArrayLong( PA_Dial4D dialog, PA_Unichar* variable, long value, 
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = position;
 	eb.fParam3 = value;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7667,7 +7795,7 @@ void PA_Dial4DSetArrayTextFromTTR( PA_Dial4D dialog, PA_Unichar* variable, PA_Un
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = 0;
 	eb.fUniString1 = *ustr;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7680,7 +7808,7 @@ long PA_Dial4DGetArraySize( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_ARRAY_SIZE, &eb );
 	sErrorCode = eER_NoErr;
@@ -7693,7 +7821,7 @@ void PA_Dial4DDeleteArrayElements( PA_Dial4D dialog, PA_Unichar* variable, long 
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = position;
 	eb.fParam3 = amount;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7706,7 +7834,7 @@ void PA_Dial4DRedrawExternalArea( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_REDRAW_EXTERNAL_AREA, &eb );
 	sErrorCode = eER_NoErr;
@@ -7717,7 +7845,7 @@ void PA_Dial4DNewArrayPicture( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_NEW_ARRAY_PICTURE, &eb );
 	sErrorCode = eER_NoErr;
@@ -7728,7 +7856,7 @@ void PA_Dial4DSetArrayPicture( PA_Dial4D dialog, PA_Unichar* variable, PA_Pictur
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = position;
 	eb.fPicture = picture;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7743,7 +7871,7 @@ void PA_Dial4DSetArrayPictureFromResources( PA_Dial4D dialog, PA_Unichar* variab
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fHandle = (PA_Handle) idArray;
 	eb.fParam2 = nb;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7756,7 +7884,7 @@ void PA_Dial4DSetEnterable( PA_Dial4D dialog, PA_Unichar* variable, char enterab
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fManyToOne = enterable;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_ENTERABLE, &eb );
@@ -7767,7 +7895,7 @@ void PA_Dial4DSetMin( PA_Dial4D dialog, PA_Unichar* variable, double minValue )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = eVK_Real;
 	eb.fReal   = minValue;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7780,7 +7908,7 @@ void PA_Dial4DSetMinDate( PA_Dial4D dialog, PA_Unichar* variable, short day, sho
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = eVK_Date;
 	eb.fDate.fDay   = day;
 	eb.fDate.fMonth = month;
@@ -7795,7 +7923,7 @@ void PA_Dial4DSetMax( PA_Dial4D dialog, PA_Unichar* variable, double maxValue )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = eVK_Real;
 	eb.fReal   = maxValue;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7808,7 +7936,7 @@ void PA_Dial4DSetMaxDate( PA_Dial4D dialog, PA_Unichar* variable, short day, sho
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = eVK_Date;
 	eb.fDate.fDay   = day;
 	eb.fDate.fMonth = month;
@@ -7823,8 +7951,8 @@ void PA_Dial4DSetUserData( PA_Dial4D dialog, void* userData )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
-	eb.fParam2 = (long) userData;
+	eb.fParam1 = (sLONG_PTR) dialog;
+	eb.fParam2 = (sLONG_PTR) userData;
 	Call4D( EX_DIAL4D_SET_USER_DATA, &eb );
 	sErrorCode = eER_NoErr;
 }
@@ -7834,7 +7962,7 @@ void* PA_Dial4DGetUserData( PA_Dial4D dialog )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_GET_USER_DATA, &eb );
 	sErrorCode = eER_NoErr;
 	return (void*) eb.fParam2;
@@ -7845,7 +7973,7 @@ void PA_Dial4DSet3StatesCheckBox( PA_Dial4D dialog, PA_Unichar* variable, char s
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = (long) state;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_3_STATES_CHECKBOX, &eb );
@@ -7857,7 +7985,7 @@ PA_Dial4D PA_Dial4DDial4DFromWindow( PA_WindowRef window )
 {
 	EngineBlock eb;
 
-	eb.fParam2 = (long) window;
+	eb.fParam2 = (sLONG_PTR) window;
 	Call4D( EX_DIAL4D_DIAL4D_FROM_WINDOW, &eb );
 	sErrorCode = eER_NoErr;
 	return (PA_Dial4D) eb.fParam1;
@@ -7868,7 +7996,7 @@ PA_WindowRef PA_Dial4DWindowFromDial4D( PA_Dial4D dialog )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_WINDOW_FROM_DIAL4D, &eb );
 	sErrorCode = eER_NoErr;
 	return (PA_WindowRef) eb.fParam2;
@@ -7879,7 +8007,7 @@ void PA_Dial4DSetTableFieldHListCurrent( PA_Dial4D dialog, PA_Unichar* variable,
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fTable  = table;
 	eb.fField  = field;
 	eb.fParam4 = sVirtualStructureMode;
@@ -7892,7 +8020,7 @@ void PA_Dial4DNewArrayReal( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_NEW_ARRAY_REAL, &eb );
 	sErrorCode = eER_NoErr;
@@ -7903,7 +8031,7 @@ void PA_Dial4DSetArrayReal( PA_Dial4D dialog, PA_Unichar* variable, double value
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fReal = value;
 	eb.fParam2 = position;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7916,7 +8044,7 @@ void PA_Dial4DSetEntryFilter( PA_Dial4D dialog, PA_Unichar* variable, PA_Unichar
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	PA_CopyUnichars( entryFilter, eb.fUName, sizeof(eb.fUName) );
 	Call4D( EX_DIAL4D_SET_ENTRY_FILTER, &eb );
@@ -7928,7 +8056,7 @@ void PA_Dial4DSetDisplayFormat( PA_Dial4D dialog, PA_Unichar* variable, PA_Unich
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	PA_CopyUnichars( displayFormat, eb.fUName, sizeof(eb.fUName) );
 	Call4D( EX_DIAL4D_SET_DISPLAY_FORMAT, &eb );
@@ -7940,7 +8068,7 @@ void PA_Dial4DNewArrayText( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_NEW_ARRAY_TEXT, &eb );
 	sErrorCode = eER_NoErr;
@@ -7951,7 +8079,7 @@ void PA_Dial4DSetArrayText( PA_Dial4D dialog, PA_Unichar* variable, PA_Unistring
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = position;
 	eb.fUniString1 = *ustr;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -7964,7 +8092,7 @@ PA_Unistring PA_Dial4DGetArrayText( PA_Dial4D dialog, PA_Unichar* variable, long
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = position;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_ARRAY_TEXT, &eb );
@@ -7977,7 +8105,7 @@ void PA_Dial4DDisposeEmptyDialog( PA_Dial4D dialog )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_DISPOSE_EMPTY_DIALOG, &eb );
 	sErrorCode = eER_NoErr;
 }
@@ -7987,7 +8115,7 @@ void PA_Dial4DShowHideObject( PA_Dial4D dialog, PA_Unichar* objectName, char vis
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = (long) visible;
 	PA_CopyUnichars( objectName, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SHOW_HIDE_OBJECT, &eb );
@@ -7999,7 +8127,7 @@ void PA_Dial4DSetTime( PA_Dial4D dialog, PA_Unichar* variable, long time )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fLongint = time;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_TIME, &eb );
@@ -8011,7 +8139,7 @@ long PA_Dial4DGetTime( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GET_TIME, &eb );
 	sErrorCode = eER_NoErr;
@@ -8024,7 +8152,7 @@ void PA_Dial4DSetObjectTitle( PA_Dial4D dialog, PA_Unichar* objectName, PA_Unich
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fManyToOne = 0;	// 1 to pass variable name
 	PA_CopyUnichars( title, eb.fUName, sizeof(eb.fUName) );
 	PA_CopyUnichars( objectName, eb.fUString, sizeof(eb.fUString) );
@@ -8037,7 +8165,7 @@ void PA_Dial4DUpdateObjectTitle( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_UPDATE_OBJECT_TITLE, &eb );
 	sErrorCode = eER_NoErr;
@@ -8048,8 +8176,8 @@ void PA_Dial4DSetVariableRect( PA_Dial4D dialog, PA_Unichar* variable, PA_Rect r
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
-	eb.fParam2 = (long) &rect;
+	eb.fParam1 = (sLONG_PTR) dialog;
+	eb.fParam2 = (sLONG_PTR) &rect;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_SET_VARIABLE_RECT, &eb );
 	sErrorCode = eER_NoErr;
@@ -8060,7 +8188,7 @@ void PA_Dial4DAllowXResize( PA_Dial4D dialog, char allowResize )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = (long) allowResize;
 	Call4D( EX_DIAL4D_ALLOW_X_RESIZE, &eb );
 	sErrorCode = eER_NoErr;
@@ -8071,7 +8199,7 @@ void PA_Dial4DAllowYResize( PA_Dial4D dialog, char allowResize )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = (long) allowResize;
 	Call4D( EX_DIAL4D_ALLOW_Y_RESIZE, &eb );
 	sErrorCode = eER_NoErr;
@@ -8084,7 +8212,7 @@ void PA_Dial4DGetWindowMinMaxInfo( PA_Dial4D dialog,
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_GET_WINDOW_MIN_MAX_INFO, &eb );
 	sErrorCode = eER_NoErr;
 
@@ -8107,7 +8235,7 @@ void PA_Dial4DSetWindowSize( PA_Dial4D dialog, long width, long height )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = width;
 	eb.fParam3 = height;
 	Call4D( EX_DIAL4D_SET_WINDOW_SIZE, &eb );
@@ -8119,7 +8247,7 @@ long PA_Dial4DFindArrayLong( PA_Dial4D dialog, PA_Unichar* variable, long value,
 {
 	EngineBlock eb;
 
-	eb.fParam1  = (long) dialog;
+	eb.fParam1  = (sLONG_PTR) dialog;
 	eb.fLongint = value;
 	eb.fParam2  = startPosition;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -8134,7 +8262,7 @@ long PA_Dial4DFindArrayReal( PA_Dial4D dialog, PA_Unichar* variable, double valu
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fReal = value;
 	eb.fParam2 = startPosition;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
@@ -8149,7 +8277,7 @@ void PA_Dial4DGetLastObject( PA_Dial4D dialog, PA_Unichar* objectName )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	Call4D( EX_DIAL4D_GET_LAST_OBJECT, &eb );
 	sErrorCode = eER_NoErr;
 	PA_CopyUnichars( eb.fUName, objectName, sizeof(eb.fUName) );
@@ -8160,7 +8288,7 @@ void PA_Dial4DGotoVariable( PA_Dial4D dialog, PA_Unichar* variable )
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
 	Call4D( EX_DIAL4D_GOTO_VARIABLE, &eb );
 	sErrorCode = eER_NoErr;
@@ -8182,7 +8310,7 @@ void PA_Dial4DHighlightText( PA_Dial4D dialog, PA_Unichar* variable, short start
 {
 	EngineBlock eb;
 
-	eb.fParam1 = (long) dialog;
+	eb.fParam1 = (sLONG_PTR) dialog;
 	eb.fParam2 = (long) startSelection;
 	eb.fParam3 = (long) endSelection;
 	PA_CopyUnichars( variable, eb.fUString, sizeof(eb.fUString) );
