@@ -7,7 +7,7 @@ XLS II (moved from sources.4d.com)
 
 | carbon | cocoa | win32 | win64 |
 |:------:|:-----:|:---------:|:---------:|
-|🆗|🆗|🆗|🆗|
+|🆗|🚫|🆗|🆗|
 
 Commands
 ---
