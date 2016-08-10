@@ -1,7 +1,7 @@
 4d-pugin-xls-basic-excel
 ===================
 
-XLS II (BasicExcel)
+XLS II ([BasicExcel](http://www.codeproject.com/Articles/13852/BasicExcel-A-Class-to-Read-and-Write-to-Microsoft))
 
 ##Platform
 
