@@ -1,56 +1,56 @@
-4d-pugin-xls-simple
+4d-pugin-xls-basic-excel
 ===================
 
-XLS II (moved from sources.4d.com)
+XLS II (BasicExcel)
 
 ##Platform
 
 | carbon | cocoa | win32 | win64 |
 |:------:|:-----:|:---------:|:---------:|
-|🆗|🚫|🆗|🆗|
+|🆗|🆗|🆗|🆗|
 
 Commands
 ---
 
-```c
+```
 // --- File
-XLS_Create
-XLS_Load
-XLS_Save_as
-XLS_CLOSE
+XLS Create
+XLS Load
+XLS Save as
+XLS CLOSE
 
 // --- Workbook
-XLS_Get_total_sheets
-XLS_Add_sheet
-XLS_Get_sheet_name
-XLS_Set_sheet_name
+XLS Get total sheets
+XLS Add sheet
+XLS Get sheet name
+XLS Set sheet name
 
 // --- Worksheet
-XLS_Get_total_rows
-XLS_Get_total_columns
-XLS_Set_column_width
-XLS_Get_column_width
-XLS_Merge_cells
+XLS Get total rows
+XLS Get total columns
+XLS Set column width
+XLS Get column width
+XLS Merge cells
 
 // --- Cell
-XLS_Clear_value
-XLS_Get_text_value
-XLS_Get_real_value
-XLS_Get_long_value
-XLS_Set_long_value
-XLS_Set_real_value
-XLS_Set_text_value
-XLS_Get_value_type
+XLS Clear value
+XLS Get text value
+XLS Get real value
+XLS Get long value
+XLS Set long value
+XLS Set real value
+XLS Set text value
+XLS Get value type
 
 // --- Font
-XLS_SET_FONT_PROPERTY
-XLS_GET_FONT_PROPERTY
+XLS SET FONT PROPERTY
+XLS GET FONT PROPERTY
 
 // --- Format
-XLS_SET_FORMAT_PROPERTY
-XLS_GET_FORMAT_PROPERTY
-XLS_Get_format_string
-XLS_Set_format_string
-XLS_Get_wrapping
-XLS_SET_WRAPPING
+XLS SET FORMAT PROPERTY
+XLS GET FORMAT PROPERTY
+XLS Get format string
+XLS Set format string
+XLS Get wrapping
+XLS SET WRAPPING
 ```
