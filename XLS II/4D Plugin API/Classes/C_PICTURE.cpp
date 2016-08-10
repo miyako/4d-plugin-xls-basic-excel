@@ -8,6 +8,11 @@
 
 #include "C_PICTURE.h"
 
+#define CMU_TRANSFORM_PICTURE 988
+#define CMU_PICTURE_PROPERTIES 457
+#define CMU_CREATE_THUMBNAIL 679
+#define CMU_CONVERT_PICTURE 1002
+
 unsigned int CPicture::_GetCount()
 {
 	uint32_t i;
@@ -227,7 +232,45 @@ uint32_t CPicture::getCount()
 	return this->_Count;		
 }
 
-#define CMU_TRANSFORM_PICTURE 988
+PA_Picture CPicture::createCopy(const char* type)
+{
+    CUTF8String u8 = CUTF8String((const uint8_t *)type);
+    
+    uint32_t size = ((uint32_t)u8.length() * sizeof(PA_Unichar)) + sizeof(PA_Unichar);
+    std::vector<uint8_t> buf(size);
+    uint32_t len = PA_ConvertCharsetToCharset(
+                                              (char *)u8.c_str(),
+                                              (uint32_t)u8.length(),
+                                              eVTC_UTF_8,
+                                              (char *)&buf[0],
+                                              size,
+                                              eVTC_UTF_16
+                                              );    
+    CUTF16String u16 = CUTF16String((const PA_Unichar *)&buf[0], len);	
+    
+    PA_Unistring u = PA_CreateUnistring((PA_Unichar*)u16.c_str());
+    
+    PA_Picture p;
+    
+    p = PA_DuplicatePicture(this->_CPicture, 1);
+    
+    PA_Variable args[2];
+    args[0] = PA_CreateVariable(eVK_Picture);
+    PA_SetPictureVariable(&args[0], p);
+    args[1] = PA_CreateVariable(eVK_Unistring);
+    
+    PA_SetStringVariable(&args[1], &u);
+    PA_ExecuteCommandByID(CMU_CONVERT_PICTURE, args, 2);
+    
+    p = PA_GetPictureVariable(args[0]);
+    
+    PA_SetPictureVariable(&args[0], NULL);
+    
+    PA_ClearVariable(&args[0]);	
+    PA_ClearVariable(&args[1]);
+    
+    return p;    
+}
 
 PA_Picture CPicture::createGrayScale()
 {
@@ -255,7 +298,49 @@ PA_Picture CPicture::createGrayScale()
 	return p;	
 }
 
-#define CMU_PICTURE_PROPERTIES 457
+#if VERSIONMAC
+#ifdef __OBJC__	
+NSImage* CPicture::copyImage()
+{
+    CGImageRef cgImage = NULL;
+    NSImage *nsImage = NULL;
+    
+    cgImage = (CGImageRef)PA_CreateNativePictureForScreen(this->_CPicture);
+    
+    if(cgImage)
+    {
+        //  10.6
+        nsImage = [[NSImage alloc]initWithCGImage:cgImage size:NSZeroSize];
+        /*
+        CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);	
+        CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+        CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+        
+        CGImageDestinationAddImage(destination, cgImage, properties);
+        CGImageDestinationFinalize(destination);
+        
+        CFRelease(destination);
+        CFRelease(properties);
+        
+        nsImage = [[NSImage alloc]initWithData:(NSData *)data];
+        
+        CFRelease(data);
+        */         
+        CFRelease(cgImage);
+
+    }
+    return nsImage;    
+}  
+
+void CPicture::setImage(NSImage *image)
+{
+    if(image){
+        NSData *imageData = [image TIFFRepresentation];
+        this->setBytes((const uint8_t *)[imageData bytes], [imageData length]);
+    }
+}
+#endif
+#endif
 
 void CPicture::getSize(unsigned int *width, unsigned int *height)
 {
@@ -278,8 +363,6 @@ void CPicture::getSize(unsigned int *width, unsigned int *height)
 	PA_ClearVariable(&args[1]);
 	PA_ClearVariable(&args[2]);	
 }
-
-#define CMU_CREATE_THUMBNAIL 679
 
 PA_Picture CPicture::createThumbnail(unsigned int width, unsigned int height)
 {
@@ -374,6 +457,35 @@ PA_Picture C_PICTURE::createGrayScale()
 {
 	return this->_CPicture->createGrayScale();	
 }
+
+PA_Picture C_PICTURE::createCopyPNG()
+{
+    return this->_CPicture->createCopy(".png");	
+}
+
+PA_Picture C_PICTURE::createCopyJPG()
+{
+    return this->_CPicture->createCopy(".jpg");	
+}
+
+PA_Picture C_PICTURE::createCopyTIF()
+{
+    return this->_CPicture->createCopy(".tif");	
+}
+
+#if VERSIONMAC
+#ifdef __OBJC__	
+NSImage* C_PICTURE::copyImage()
+{
+    return this->_CPicture->copyImage();	
+} 
+
+void C_PICTURE::setImage(NSImage *image)
+{
+    this->_CPicture->setImage(image);	
+} 
+#endif
+#endif
 
 void C_PICTURE::getSize(unsigned int *width, unsigned int *height)
 {

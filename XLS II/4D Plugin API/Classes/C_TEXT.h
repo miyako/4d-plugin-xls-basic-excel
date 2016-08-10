@@ -11,6 +11,12 @@
 
 #include "4DPluginAPI.h"
 
+#if VERSIONMAC
+#import <CoreFoundation/CoreFoundation.h>
+#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

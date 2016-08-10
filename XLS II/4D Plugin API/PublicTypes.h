@@ -5,19 +5,27 @@
 // File : PublicTypes.h
 // Description : all the structures needed to use 4D Plugin API
 //
-// rev : v12.0 - with modification by miyako [2011.05.29] -
+// rev : v13
 //
 // ---------------------------------------------------------------
 
 #ifndef __PUBLICTYPES__
 #define __PUBLICTYPES__
 
-#include <string>
-#include <vector>
-#include <map>
-
 // all the 4D Application structures use 2 bytes alignment
 #pragma pack(push,2)
+
+#if VERSIONWIN
+typedef __int64 PA_long64;
+typedef unsigned __int64 PA_ulong64;
+typedef unsigned long PA_ulong32;
+typedef long PA_long32;
+#elif VERSIONMAC
+typedef SInt64 PA_long64;
+typedef UInt64 PA_ulong64;
+typedef UInt32 PA_ulong32;
+typedef SInt32 PA_long32;
+#endif
 
 typedef char** PA_Handle;
 typedef void* PA_WindowRef;
@@ -33,88 +41,20 @@ typedef void* PA_PasteboardRef;
 
 typedef struct
 {
-	long			fLength;
+	PA_long32			fLength;
 	PA_Unichar*		fString;
-	long			fReserved1;
-	long			fReserved2;
+	PA_long32			fReserved1;
+	PA_long32			fReserved2;
 } PA_Unistring;
 
-//	start of modification ========================================
-
-//	use these instead of ULONG/SLONG (which assumes that Mac is always 32-bit)
-typedef unsigned int		uint32_t;
-typedef int					int32_t;
-
-//	shouldn't need these in current 4D...
-typedef unsigned short		uint16_t;
-typedef short				int16_t;
-typedef unsigned long long	uint64_t;
-typedef long long			int64_t;
-
-//	use this type when a pointer needs to be offset by a specific number of bytes
-typedef unsigned char		uint8_t;
-
-typedef uint8_t * BytePtr;
-typedef BytePtr PackageBlock[25], *PackagePtr, **PackageHdl;
-
-//	string classes for Unicode
-typedef std::basic_string<PA_Unichar> CUTF16String;
-typedef std::basic_string<uint8_t> CUTF8String;
-
-#if VERSIONMAC
-
-#ifdef __LP64__
-//64-bit Mac
-typedef signed long			sLONG_PTR; //	model LP64	
-typedef unsigned long		uLONG_PTR; 				
-#else
-//32-bit Mac
-typedef signed int			sLONG_PTR; 
-typedef unsigned int		uLONG_PTR; 		
-#endif
-
-#else
-
-#ifdef _WIN64
-//64-bit Win
-typedef	signed long long	sLONG_PTR; //	model LLP64	
-typedef	unsigned long long	uLONG_PTR; 								
-#else
-//32-bit Win
-typedef signed long			sLONG_PTR;	
-typedef unsigned long		uLONG_PTR;					
-#endif
-
-#endif
-
-/*
- 
- long(4) on Mac 32-bit, long(8) on Mac 64-bit, (Long and Pointer is 64)
- long(4) on Win 32-bit, __int64 on Win 64-bit. (Long Long and Pointer is 64, but Long is 32)
- 
- use sLONG_PTR (instead of long) for address pointers.
-	
- */
-
-/*
 // need a crossplatform type for 64 bits integers
-#if VERSIONWIN
-	typedef __int64 PA_long64;
-	typedef unsigned __int64 PA_ulong64;
-#elif VERSIONMAC
-	typedef long long PA_long64;
-	typedef unsigned long long PA_ulong64;
-#endif
 #if PA_64BITS_ARCHITECTURE
 	typedef PA_long64 sLONG_PTR;
 	typedef PA_ulong64 uLONG_PTR;
 #else
-	typedef long sLONG_PTR;
-	typedef unsigned long uLONG_PTR;
+	typedef PA_long32 sLONG_PTR;
+	typedef PA_ulong32 uLONG_PTR;
 #endif
- */
-
-//	end of modification ==========================================
 
 // function pointers to pass to PA_RunInMainProcess
 typedef void (*PA_RunInMainProcessProcPtr) (void*);
@@ -128,6 +68,17 @@ typedef struct PluginBlock
 } PluginBlock;
 typedef PluginBlock* PA_PluginParameters;
 
+#ifndef uint8_t
+typedef unsigned char uint8_t;
+#endif
+#ifndef uint16_t
+typedef unsigned short uint16_t;
+#endif
+#ifndef uint32_t
+typedef unsigned int uint32_t;
+#endif
+typedef uint8_t * BytePtr;
+typedef BytePtr *PackagePtr;
 
 // different selectors that can be sent to plugin for different event
 
@@ -160,7 +111,7 @@ typedef struct PA_Event
 {
 	short			fWhat;
 	sLONG_PTR		fMessage;
-	long			fWhen;
+	PA_long32			fWhen;
 	short			fWhereV;
 	short			fWhereH;
 	short			fModifiers;
@@ -209,6 +160,7 @@ typedef enum
 	eAE_Drag							= 81,
 	eAE_Drop							= 82,
 	eAE_BeginDrag						= 85,	// added in v11
+	eAE_ShowHide						= 86,	// added in v14
 	eAE_WebPublish						= 128,
 	eAE_WebPublishPicture				= 129,
 	eAE_WebDisposeData					= 130,
@@ -337,15 +289,15 @@ typedef struct PA_PluginProperties
 	short			fJustification;
 	char			fFontSize;
 	char			fFontFace;
-	long			fForeColor;
-	long			fBackColor;
+	PA_long32			fForeColor;
+	PA_long32			fBackColor;
 	void*			fAdvancedProperties;
-	long			fAdvancedPropertiesSize;
+	PA_long32			fAdvancedPropertiesSize;
 	char			fPageMode;		//	0: List, 1: Page, 2: Page non enterable.
 	char			fPrintingMode;	//	0: Not printing, -1: Printing, -2: Print line.
 	short			fPage;
 	short			fTable;
-	long			fUnused;
+	PA_long32			fUnused;
 	char			fDraggable;
 	char			fDroppable;
 	short			fLook;
@@ -388,11 +340,11 @@ typedef struct PA_Point
 
 typedef struct PA_ReadWriteBlock
 {
-   unsigned long	fDataType;
+   PA_ulong32	fDataType;
    short			fDataID;
-   long				fDataSize;
+   PA_long32				fDataSize;
    sLONG_PTR		fPackID;
-   long				fProcessID;
+   PA_long32				fProcessID;
 } PA_ReadWriteBlock;
 
 
@@ -403,7 +355,7 @@ typedef struct PA_ReadWriteBlock
 
 typedef struct PA_Array
 {
-	long			fNbElements;	// Number of elements
+	PA_long32			fNbElements;	// Number of elements
 	PA_Handle		fData;			// Handle to elements
 	short			fCurrent;		// Selected element number
 } PA_Array;
@@ -430,16 +382,14 @@ typedef struct PA_Date
 	short			fYear;
 } PA_Date;
 
-
 // --------------------------------------------------------------------------------
 // 4D Application Blob expression 
 // --------------------------------------------------------------------------------
 typedef struct PA_Blob
 {
-   long				fSize;
+   PA_long32				fSize;
 	PA_Handle		fHandle;
 } PA_Blob;
-
 
 // --------------------------------------------------------------------------------
 // 4D Application pointers
@@ -455,8 +405,8 @@ typedef enum
 typedef struct PointerToVariable
 {
 	char			fName[ 32 ];
-	long			fIndice;		// used for pointer to array elements
-	long			fTag;			// added in 2004.1
+	PA_long32			fIndice;		// used for pointer to array elements
+	PA_long32			fTag;			// added in 2004.1
 } PointerToVariable;
 
 
@@ -498,15 +448,15 @@ typedef enum
 typedef struct PA_DragAndDropInfo
 {
 	char				fReserved1[10];
-	long				fToArrayIndice;		// indice of element when destination is an array
-	long				fReserved2[2];
-	long				fFromArrayIndice;	// indice of element when source is an array
+	PA_long32				fToArrayIndice;		// indice of element when destination is an array
+	PA_long32				fReserved2[2];
+	PA_long32				fFromArrayIndice;	// indice of element when source is an array
 	short				fFromProcess;
 	short				fFromWhereV;		// where user clicks at first
 	short				fFromWhereH;
 	short				fToWhereV;			// where user release mouse button
 	short				fToWhereH;
-	long				fReserved3;
+	PA_long32				fReserved3;
 	char				fVariableName[32];	// empty string or variable name if user drags a variable
 	char				fInterProcess;
 	short 				fField;
@@ -531,28 +481,28 @@ typedef struct PA_Variable
 		char			fBoolean;	// C_BOOLEAN variable
 		PA_Picture		fPicture;	// C_PICTURE variable
 		PA_Blob			fBlob;		// C_BLOB variable
-		long			fLongint;	// C_LONGINT variable
-		long			fTime;		// C_TIME variable
+		PA_long32			fLongint;	// C_LONGINT variable
+		PA_long32			fTime;		// C_TIME variable
 		PA_Unistring	fString;	// C_STRING and C_TEXT variables
 		PA_Array		fArray;		// Any array
 		PA_Pointer*		fPointer;	// C_POINTER variables
 		unsigned char	fOperation;	// to pass '*', '<' or '>' to PA_ExecuterCommandByID
-		
+
 		struct
 		{
 			short fFieldNumber;	// to pass a field or table to PA_ExecuteCommandByID
 			short fTableNumber;	// pass 0 to pass only a field
 			short fUnused1;		// always set to zero
 		} fTableFieldDefinition;
-		
+
 		struct 
 		{
 			char fName[ 32 ];
-			long fIndice;		// used for pointer to array elements
+			PA_long32 fIndice;		// used for pointer to array elements
 			char fType;			// 0: local, 1: process, 2: interprocess, 3: param
-			long fTag;
+			PA_long32 fTag;
 		} fVariableDefinition;
-		
+
 		char fFiller[258];	// to ensure correct struct size
 	} uValue;
 } PA_Variable;
@@ -752,7 +702,7 @@ typedef enum
   eFK_TimeField			= 11,	//	Time field
   eFK_Long8				= 25,	
   eFK_BlobField			= 30,	//	Blob field
-  eFK_FloatField		= 35	//  Float	
+  eFK_FloatField		= 35	//  Float
 } PA_FieldKind;
 
 
@@ -798,7 +748,7 @@ typedef enum
 	eVK_Pointer			= 23,	// Variable declared using C_POINTER
 	eVK_Blob			= 30,	// Variable declared using C_BLOB
 	eVK_ArrayBlob		= 31,	// One dimension array declared using ARRAY BLOB
-	eVK_ArrayTime		= 32,	// One dimension array declared using ARRAY TIME	
+	eVK_ArrayTime		= 32,	// One dimension array declared using ARRAY TIME
 	eVK_Unistring		= 33,	// Variable declared using C_STRING or C_TEXT
 	eVK_ArrayUnicode	= 34	// One Dimension array declared using ARRAY STRING or ARRAY TEXT
 } PA_VariableKind;

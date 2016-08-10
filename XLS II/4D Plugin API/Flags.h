@@ -7,15 +7,15 @@
 // define compiler directive for the two supported platforms : 
 // Windows and Mac PPC/Intel
 //
-// rev : v12.0
+// rev : v13
 //
 // ---------------------------------------------------------------
 
 #ifndef __FLAGS__
 #define __FLAGS__
 
-//#define PA_SMALLENDIAN 1
-//#define PA_BIGENDIAN 0
+#define PA_SMALLENDIAN 1
+#define PA_BIGENDIAN 0
 #define PA_64BITS_ARCHITECTURE 0
 
 // _WIN32 is defined when compiling for Windows target (32bits as 64 bits)
@@ -23,9 +23,7 @@
 	// See http://msdn.microsoft.com/en-us/library/b0084kay(v=VS.80).aspx for predefined macros on Visual
 	#define VERSIONWIN 1
 	#define VERSIONMAC 0
-	#define PA_SMALLENDIAN 1
-	#define PA_BIGENDIAN 0
-	#if defined (_WIN64)//this may not be defined if using VS Express Edition; defined as preprocessor definition
+	#if defined (WIN64) || defined (_WIN64)
 		#undef PA_64BITS_ARCHITECTURE
 		#define PA_64BITS_ARCHITECTURE 1
 	#endif
@@ -36,10 +34,11 @@
 	#if defined(__BIG_ENDIAN__)
 		#define PA_SMALLENDIAN 0
 		#define PA_BIGENDIAN 1
-	#else
-		#define PA_SMALLENDIAN 1
-		#define PA_BIGENDIAN 0
 	#endif 
+
+    #undef PA_64BITS_ARCHITECTURE
+    #define PA_64BITS_ARCHITECTURE __LP64__
+
 #else
 	#error "architecture not supported"
 #endif

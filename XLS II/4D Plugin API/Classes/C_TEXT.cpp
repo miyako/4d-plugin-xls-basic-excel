@@ -59,8 +59,11 @@ void C_TEXT::setUTF16String(NSString* pString)
 	uint32_t size = (len * sizeof(PA_Unichar)) + sizeof(PA_Unichar);
 	std::vector<uint8_t> buf(size);	
 	
-	if([pString getCString:(char *)&buf[0] maxLength:size encoding:NSUnicodeStringEncoding])
+    if([pString getCString:(char *)&buf[0] maxLength:size encoding:NSUnicodeStringEncoding]){
 		this->setUTF16String((const PA_Unichar *)&buf[0], len);	
+    }else{
+        this->setUTF16String(@"");	
+    }
 }
 
 NSMutableString* C_TEXT::copyUTF16MutableString()
