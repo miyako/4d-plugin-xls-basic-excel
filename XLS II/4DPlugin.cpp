@@ -1188,7 +1188,10 @@ void XLS_SET_FONT_PROPERTY(sLONG_PTR *pResult, PackagePtr pParams)
 					if(cell){
 						
 						XLSFormatManager mgr(*wb);
-						ExcelFont font;
+//						ExcelFont font;
+						
+						CellFormat fmt(mgr, cell);
+						ExcelFont font = fmt.get_font();
 						
 						wstring u;
 						_setString(name, u);
@@ -1201,7 +1204,7 @@ void XLS_SET_FONT_PROPERTY(sLONG_PTR *pResult, PackagePtr pParams)
 						font.set_escapement(escapement.getIntValue());
 						font.set_height(height.getIntValue());
 						
-						CellFormat fmt(mgr);
+//						CellFormat fmt(mgr);
 						fmt.set_font(font);
 						cell->SetFormat(fmt);
 						
@@ -1347,7 +1350,9 @@ void XLS_SET_FORMAT_PROPERTY(sLONG_PTR *pResult, PackagePtr pParams)
 					if(cell){
 						
 						XLSFormatManager mgr(*wb);
-						CellFormat fmt(mgr);
+//						CellFormat fmt(mgr);
+						
+						CellFormat fmt(mgr, cell);
 						
 						fmt.set_alignment(alignment.getIntValue());
 						fmt.set_rotation(rotation.getIntValue());
