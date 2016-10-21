@@ -1704,7 +1704,7 @@ public:
 
 double GetDoubleFromRKValue(LONG rkValue);	///< Convert a rk value to a double.
 int GetIntegerFromRKValue(LONG rkValue); 	///< Convert a rk value to an integer.
-LONG GetRKValueFromDouble(double value); 	///< Convert a double to a rk value.
+ULONG GetRKValueFromDouble(double value); 	///< Convert a double to a rk value.
 LONG GetRKValueFromInteger(int value);		///< Convert an integer to a rk value.
 bool CanStoreAsRKValue(double value);		///< Returns true if the supplied double can be stored as a rk value.
 

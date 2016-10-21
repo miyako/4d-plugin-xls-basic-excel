@@ -4961,11 +4961,11 @@ union RKValueUnion {
 };
 
 // Convert a double to a RK value.
-LONG GetRKValueFromDouble(double value)
+ULONG GetRKValueFromDouble(double value)
 {
 	bool isMultiplied = false;
-	LONG testVal1 = (LONG)value * 100;
-	LONG testVal2 = (LONG)(value * 100);
+	ULONG testVal1 = (ULONG)value * 100;
+	ULONG testVal2 = (ULONG)(value * 100);
 	if (testVal1 != testVal2) {
 		isMultiplied = true;
 		value *= 100;
@@ -4979,7 +4979,7 @@ LONG GetRKValueFromDouble(double value)
 	intdouble.doublevalue_ = value;
 	intdouble.intvalue_ >>= 34;
 
-	LONG rkValue = (LONG) intdouble.intvalue_;
+	ULONG rkValue = (ULONG) intdouble.intvalue_;
 	rkValue <<= 2;
 	rkValue |= (isMultiplied? 1: 0);
 	return rkValue;
@@ -5861,7 +5861,7 @@ void BasicExcel::UpdateWorksheets()
 						{
 							// Check whether it is a single cell or range of cells.
 							// Double values which cannot be stored as RK values will be stored as single cells.
-							bool canStoreAsRKValue = CanStoreAsRKValue(cell->GetDouble());
+							bool canStoreAsRKValue = false;//CanStoreAsRKValue(cell->GetDouble());
 							int cl = c + 1;
 							for(; cl<maxCols; ++cl) {
 								const BasicExcelCell* cellNext = sheet.Cell(r, cl);
