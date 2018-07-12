@@ -11,6 +11,8 @@
 #include "BasicExcel/ExcelFormat.h"
 #include "iconv/iconv.h"
 
+#include <mutex>
+
 using namespace ExcelFormat;
 using namespace std;
 

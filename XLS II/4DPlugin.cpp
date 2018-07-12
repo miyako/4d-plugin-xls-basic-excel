@@ -12,6 +12,8 @@
 #include "4DPluginAPI.h"
 #include "4DPlugin.h"
 
+std::mutex mutexWorkbooks;
+
 std::map<uint32_t, BasicExcel*> _workbooks;
 
 #pragma mark -
@@ -196,6 +198,8 @@ void _getPath(C_TEXT &t, wstring &p){
 
 BasicExcel *_workbookCreate(unsigned int *index){
 	
+	std::lock_guard<std::mutex> lock(mutexWorkbooks);
+	
 	BasicExcel *w = new BasicExcel;
 	
 	unsigned int i = 1;
@@ -213,6 +217,8 @@ BasicExcel *_workbookCreate(unsigned int *index){
 
 void _workbookDelete(unsigned int i){
 	
+	std::lock_guard<std::mutex> lock(mutexWorkbooks);
+	
 	BasicExcel *w = NULL;
 	
 	std::map<uint32_t, BasicExcel*>::iterator pos = _workbooks.find(i);
@@ -227,6 +233,8 @@ void _workbookDelete(unsigned int i){
 
 BasicExcel *_workbookGet(unsigned int i){
 	
+	std::lock_guard<std::mutex> lock(mutexWorkbooks);
+	
 	BasicExcel *w = NULL;
 	
 	std::map<uint32_t, BasicExcel*>::iterator pos = _workbooks.find(i);
@@ -236,31 +244,6 @@ BasicExcel *_workbookGet(unsigned int i){
 	}
 	
 	return w;
-}
-
-#pragma mark -
-
-bool IsProcessOnExit()
-{
-	C_TEXT name;
-	PA_long32 state, time;
-	PA_GetProcessInfo(PA_GetCurrentProcessNumber(), name, &state, &time);
-	CUTF16String procName(name.getUTF16StringPtr());
-	CUTF16String exitProcName((PA_Unichar *)"$\0x\0x\0\0\0");
-	return (!procName.compare(exitProcName));
-}
-
-void OnStartup()
-{
-	
-}
-
-void OnCloseProcess()
-{
-	if(IsProcessOnExit())
-	{
-		_workbooks.clear();
-	}
 }
 
 #pragma mark -
@@ -769,7 +752,7 @@ void XLS_Merge_cells(sLONG_PTR *pResult, PackagePtr pParams)
 				int c = column.getIntValue();
 				int h = height.getIntValue();
 				int w = width.getIntValue();
-				
+				/*
 				if(   (c > 0)
 					 && (c <= ws->GetTotalCols())
 					 && (r > 0)
@@ -778,6 +761,17 @@ void XLS_Merge_cells(sLONG_PTR *pResult, PackagePtr pParams)
 					 && ((h + r) <= ws->GetTotalRows())
 					 && (w > 1)
 					 && ((w + c) <= ws->GetTotalCols())){
+					
+					*/
+				   //means that the height or the width have to be > 1
+				if(   (c > 0)
+					 && (c <= ws->GetTotalCols())
+					 && (r > 0)
+					 && (r <= ws->GetTotalRows())
+					 && ((h > 1) || (w>1))
+					 && ((h + r) <= ws->GetTotalRows())
+					 && ((w + c) <= ws->GetTotalCols())){
+					//
 					ws->MergeCells(r-1, c-1, h, w);
 					returnValue.setIntValue(1);
 				}

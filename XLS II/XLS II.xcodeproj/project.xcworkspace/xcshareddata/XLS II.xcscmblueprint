@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "000965B56C4278BDB8FE9DF370510CD86C2A8E0F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "000965B56C4278BDB8FE9DF370510CD86C2A8E0F" : 9223372036854775807,
+    "E3A4EAF4FFC3A92CC14DACB57F399C2852A04011" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "2D20A2CF-3297-4B53-AEDA-333D187A65CA",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "000965B56C4278BDB8FE9DF370510CD86C2A8E0F" : "4d-plugin-xls-basic-excel\/",
+    "E3A4EAF4FFC3A92CC14DACB57F399C2852A04011" : "4d-plugin-xls\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "XLS II",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "XLS II\/XLS II.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/miyako\/4d-plugin-xls-basic-excel.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "000965B56C4278BDB8FE9DF370510CD86C2A8E0F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/miyako\/4d-plugin-xls.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E3A4EAF4FFC3A92CC14DACB57F399C2852A04011"
+    }
+  ]
+}
