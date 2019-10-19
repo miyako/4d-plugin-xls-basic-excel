@@ -8,6 +8,28 @@
 
 #include "C_BLOB.h"
 
+/* PA_YieldAbsolute isn't allowed in preemptive mode */
+
+/* PA_GetBlobParameter doesn't work in preemptive mode */
+
+void CBytes::fromParamAtIndex(PA_PluginParameters params, uint32_t index)
+{
+	if(index)
+	{
+		void *bytes = NULL;
+		PA_long32 len = PA_GetBlobParameter(params, index, bytes);
+		if(len)
+		{
+			std::vector<uint8_t>buf(len);
+			bytes = &buf[0];
+			PA_GetBlobParameter(params, index, bytes);
+			this->setBytes((const uint8_t *)bytes, len);
+		}
+	}
+}
+
+/* PA_GetBlobHandleParameter doesn't work in preemptive mode before ACI0098388 fix */
+
 void CBytes::fromParamAtIndex(PackagePtr pParams, uint32_t index)
 {
 	if(index)
@@ -18,8 +40,8 @@ void CBytes::fromParamAtIndex(PackagePtr pParams, uint32_t index)
 			unsigned int size = PA_GetHandleSize(h);
 			
 			this->_CBytes.resize(size);
-			
-			PA_MoveBlock(PA_LockHandle(h), (char *)&this->_CBytes[0], size);		
+			memmove((char *)&this->_CBytes[0], PA_LockHandle(h), size);
+//		PA_MoveBlock(PA_LockHandle(h), (char *)&this->_CBytes[0], size);
 			PA_UnlockHandle(h);
 		}
 	}
@@ -34,14 +56,18 @@ void CBytes::toParamAtIndex(PackagePtr pParams, uint32_t index)
 		if (*h) PA_DisposeHandle(*h);
 				
 		PA_Handle d = PA_NewHandle((unsigned int)this->_CBytes.size());
-        
-        if(this->_CBytes.size())//  0 is apparently a range violation on windows
-        {
-            PA_MoveBlock((char *)&this->_CBytes[0], PA_LockHandle(d), (unsigned int)this->_CBytes.size());
-            PA_UnlockHandle(d);
-        }
-		
-		*h = d;
+		/* PA_NewHandle can fail before ACI0098388 */
+		if(eER_NoErr == PA_GetLastError())
+		{
+			if(this->_CBytes.size())//  0 is apparently a range violation on windows
+			{
+				memmove(PA_LockHandle(d), (char *)&this->_CBytes[0], (unsigned int)this->_CBytes.size());
+//			PA_MoveBlock((char *)&this->_CBytes[0], PA_LockHandle(d), (unsigned int)this->_CBytes.size());
+				PA_UnlockHandle(d);
+			}
+			
+			*h = d;
+		}
 	}
 }
 
@@ -50,7 +76,8 @@ void CBytes::setBytes(const uint8_t *bytes, unsigned int len)
 	if(bytes)
 	{
 		this->_CBytes.resize(len);
-		PA_MoveBlock((void *)bytes, (char *)&this->_CBytes[0], len);	
+		memmove((char *)&this->_CBytes[0], (void *)bytes, len);
+//	PA_MoveBlock((void *)bytes, (char *)&this->_CBytes[0], len);
 	}
 }
 
@@ -60,7 +87,8 @@ void CBytes::addBytes(const uint8_t *bytes, unsigned int len)
 	{
 		unsigned int originalSize = this->_CBytes.size();
 		this->_CBytes.resize(originalSize + len);
-		PA_MoveBlock((void *)bytes, (char *)&this->_CBytes[originalSize], len);	
+		memmove((char *)&this->_CBytes[originalSize], (void *)bytes, len);
+//	PA_MoveBlock((void *)bytes, (char *)&this->_CBytes[originalSize], len);
 	}
 }
 
@@ -70,14 +98,18 @@ void CBytes::setReturn(sLONG_PTR *pResult)
 	PA_Handle *h = (PA_Handle *)pResult;
 	
 	PA_Handle d = PA_NewHandle((unsigned int)this->_CBytes.size());
-    
-    if(this->_CBytes.size())//  0 is apparently a range violation on windows
-    {
-        PA_MoveBlock((char *)&this->_CBytes[0], PA_LockHandle(d), (unsigned int)this->_CBytes.size());
-        PA_UnlockHandle(d);
-    }
-	
-	*h = d;
+	/* PA_NewHandle can fail before ACI0098388 */
+	if(eER_NoErr == PA_GetLastError())
+	{
+		if(this->_CBytes.size())//  0 is apparently a range violation on windows
+		{
+			memmove(PA_LockHandle(d), (char *)&this->_CBytes[0], (unsigned int)this->_CBytes.size());
+//		PA_MoveBlock((char *)&this->_CBytes[0], PA_LockHandle(d), (unsigned int)this->_CBytes.size());
+			PA_UnlockHandle(d);
+		}
+		*h = d;
+	}
+
 }
 
 const uint8_t *CBytes::getBytesPtr()
@@ -119,12 +151,16 @@ void CBytes::toHexText(C_TEXT *hex)
 {
 	
 	CUTF8String u;
-	
+//	size_t pos = 0;
 	std::vector<uint8_t> buf(3);
 	const std::vector<uint8_t>::const_iterator binend = this->_CBytes.end();
 	
 	for (std::vector<uint8_t>::const_iterator i = this->_CBytes.begin(); i != binend; ++i) {
-        PA_YieldAbsolute();
+		//breathe every 8KO
+//		pos++;
+//		if((pos % 0x2000)==0) {
+//			PA_YieldAbsolute();
+//		}
 #if VERSIONMAC
 		sprintf((char *)&buf[0], "%02x", *i);
 #else
@@ -152,7 +188,11 @@ void CBytes::fromHexText(C_TEXT *hex)
 	this->_CBytes.resize(0);
 	
 	for(pos = 0; pos < t.length(); pos++){
-		PA_YieldAbsolute();
+		//breathe every 8KO
+//		if((pos % 0x2000)==0) {
+//			PA_YieldAbsolute();
+//		}
+		
 		size_t f = v.find(t[pos]);
 		
 		if(f == std::string::npos){
@@ -209,12 +249,13 @@ void CBytes::fromB64Text(C_TEXT *b64)
 	const CUTF8String::const_iterator last = t.end();
 	
 	std::vector<uint8_t> buf(0);	
+	::std::size_t outpos = 0;
 	
 	int bits_collected = 0;
 	unsigned int accumulator = 0;
 	
 	for (CUTF8String::const_iterator i = t.begin(); i != last; ++i) {
-        PA_YieldAbsolute();
+
 		const int c = *i;
 		if (isspace(c) || c == '=') {
 			// Skip whitespace and padding. Be liberal in what you accept.
@@ -230,35 +271,58 @@ void CBytes::fromB64Text(C_TEXT *b64)
 		if (bits_collected >= 8) {
 			bits_collected -= 8;
 			this->_CBytes.push_back((uint8_t)((accumulator >> bits_collected) & 0xffu));
+			outpos++;
+			//breathe every 8KO
+//			if((outpos % 0x2000)==0) {
+//				PA_YieldAbsolute();
+//			}
 		}
-		
 	}
-	
 }
 
 static const char b64_table[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-void CBytes::toB64Text(C_TEXT *b64)
+void CBytes::toB64Text(C_TEXT *b64, bool fold)
 {
 	
 	const ::std::size_t binlen = this->_CBytes.size();
 	
+	::std::size_t olen = (((binlen + 2) / 3) * 4);
+	
+	if(fold)
+	{
+		olen += olen / 72; /* account for line feeds */
+	}
+
 	// Use = signs so the end is properly padded.
-	CUTF8String retval((((binlen + 2) / 3) * 4), '=');
+	CUTF8String retval(olen, '=');
 	
 	::std::size_t outpos = 0;
+	::std::size_t line_len = 0;
 	int bits_collected = 0;
 	unsigned int accumulator = 0;
 	
 	const std::vector<uint8_t>::const_iterator binend = this->_CBytes.end();
 	
 	for (std::vector<uint8_t>::const_iterator i = this->_CBytes.begin(); i != binend; ++i) {
-        PA_YieldAbsolute();
 		accumulator = (accumulator << 8) | (*i & 0xffu);
 		bits_collected += 8;
 		while (bits_collected >= 6) {
 			bits_collected -= 6;
 			retval[outpos++] = b64_table[(accumulator >> bits_collected) & 0x3fu];
+			
+			if(fold)
+			{
+				line_len++;
+				if (line_len >= 72) {
+					retval[outpos++] = '\n';
+					line_len = 0;
+					//breathe every 8KO
+					//				if((outpos % 0x2000)==0) {
+					//					PA_YieldAbsolute();
+					//				}
+				}
+			}
 		}
 	}
 	
@@ -281,6 +345,11 @@ CBytes::CBytes() : _cursorPosition(0)
 
 CBytes::~CBytes()
 {
+}
+
+void C_BLOB::fromParamAtIndex(PA_PluginParameters params, uint32_t index)
+{
+	this->_CBytes->fromParamAtIndex(params, index);
 }
 
 void C_BLOB::fromParamAtIndex(PackagePtr pParams, uint32_t index)
@@ -338,9 +407,9 @@ void C_BLOB::toHexText(C_TEXT *hex)
 	this->_CBytes->toHexText(hex);	
 }
 
-void C_BLOB::toB64Text(C_TEXT *b64)
+void C_BLOB::toB64Text(C_TEXT *b64, bool fold)
 {
-	this->_CBytes->toB64Text(b64);	
+	this->_CBytes->toB64Text(b64, fold);
 }
 
 

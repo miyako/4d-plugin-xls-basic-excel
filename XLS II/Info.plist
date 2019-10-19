@@ -11,11 +11,11 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
-	<string>4DCB</string>
+	<string>BNDL</string>
 	<key>CFBundleSignature</key>
 	<string>4D06</string>
 	<key>CFBundleVersion</key>
-	<string>2.0</string>
+	<string>2.1</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 </dict>
