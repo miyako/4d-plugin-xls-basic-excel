@@ -10,14 +10,12 @@
 #define __ARRAY_TEXT_H__ 1
 
 #include "4DPluginAPI.h"
+#include "C_TYPES.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	typedef std::vector<CUTF16String> CUTF16StringArray;
-	typedef std::vector<CUTF8String> CUTF8StringArray;		
-	
 class ARRAY_TEXT
 {
 
