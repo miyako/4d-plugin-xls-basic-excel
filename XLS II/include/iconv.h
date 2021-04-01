@@ -13,27 +13,32 @@
 
    You should have received a copy of the GNU Library General Public
    License along with the GNU LIBICONV Library; see the file COPYING.LIB.
-   If not, see <http://www.gnu.org/licenses/>.  */
+   If not, write to the Free Software Foundation, Inc., 51 Franklin Street,
+   Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 /* When installed, this file is called "iconv.h". */
 
 #ifndef _LIBICONV_H
 #define _LIBICONV_H
 
-#define _LIBICONV_VERSION 0x010F    /* version number: (major<<8) + minor */
-
-#if 0 /*HAVE_VISIBILITY*/ && BUILDING_LIBICONV
+#define _LIBICONV_VERSION 0x010E    /* version number: (major<<8) + minor */
+#define LIBICONV_PLUG 1
+#if 1 && BUILDING_LIBICONV
 #define LIBICONV_DLL_EXPORTED __attribute__((__visibility__("default")))
-#elif defined(_WIN32) && 0 /*LIBICONV_DYNAMIC*/
-  #if defined(libiconv_EXPORTS)
-    #define LIBICONV_DLL_EXPORTED __declspec(dllexport)
-  #else
-    #define LIBICONV_DLL_EXPORTED __declspec(dllimport)
-  #endif
 #else
 #define LIBICONV_DLL_EXPORTED
 #endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern LIBICONV_DLL_EXPORTED  int _libiconv_version; /* Likewise */
+
+#ifdef __cplusplus
+}
+#endif
+
 
 /* We would like to #include any system header file which could define
    iconv_t, 1. in order to eliminate the risk that the user gets compilation
@@ -109,8 +114,8 @@ extern LIBICONV_DLL_EXPORTED int iconv_close (iconv_t cd);
 
 /* Nonstandard extensions. */
 
-#if 0 /*USE_MBSTATE_T*/
-#if 0 /*BROKEN_WCHAR_H*/
+#if 1
+#if 0
 /* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
    <wchar.h>.
    BSD/OS 4.0.1 has a bug: <stddef.h>, <stdio.h> and <time.h> must be
@@ -130,7 +135,7 @@ extern "C" {
    A pointer to such an object can be used as an iconv_t. */
 typedef struct {
   void* dummy1[28];
-#if 0 /*USE_MBSTATE_T*/
+#if 1
   mbstate_t dummy2;
 #endif
 } iconv_allocation_t;
@@ -177,7 +182,7 @@ typedef void (*iconv_unicode_uc_to_mb_fallback)
                                          void* callback_arg),
               void* callback_arg,
               void* data);
-#if 1 /*HAVE_WCHAR_T*/
+#if 0
 /* Fallback function.  Invoked when a number of bytes could not be converted to
    a wide character.  This function should process all bytes from inbuf and may
    produce replacement wide characters by calling the write_replacement

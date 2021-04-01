@@ -8,7 +8,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9p/0slkGgMfyYUBpI5ALybKcfis=
+			JYDAT/fGV3xAlRfjLiKdFkRuvjE=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -22,10 +22,6 @@
 	<dict>
 		<key>QuickLook/Thumbnail.png</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			hC+U8EqvyIRM1lLakHLfvl4V9Tc=
-			</data>
 			<key>hash2</key>
 			<data>
 			nGfrvibB5KlzvZgF4Bra+l0HpRloxismgTLePnOwCdk=
@@ -33,23 +29,15 @@
 		</dict>
 		<key>Resources/English.lproj/InfoPlist.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			9p/0slkGgMfyYUBpI5ALybKcfis=
-			</data>
 			<key>hash2</key>
 			<data>
-			yqZ/hn1yrdA0Pa0gcd3L3OU8hVZls+cvqbQAqWBji8Q=
+			YtG5tMrVnHUobhXcG8xwjVnCBe2dQYMOhhQlon5QlGE=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
 		<key>Resources/constants.xlf</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			2okwQu4b567Z7ZSqImRHvJF4ers=
-			</data>
 			<key>hash2</key>
 			<data>
 			Dxd1UlBo+By1Q+8I+6O0ZgFs3hoVfOfg/HjId6Aq2FU=
@@ -57,10 +45,6 @@
 		</dict>
 		<key>Windows/XLS II.4DX</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			Sp/q6rSyXMY5nvnDBWzoHis9S5w=
-			</data>
 			<key>hash2</key>
 			<data>
 			njRRmNpoUX0dT/JGROa65Wr33I+aSFserXo3Q25HAvs=
@@ -68,10 +52,6 @@
 		</dict>
 		<key>Windows64/XLS II.4DX</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			7HJP4M+dzsTsOxJjkfuVvBewcAU=
-			</data>
 			<key>hash2</key>
 			<data>
 			Nilxf7AGQUAKVnX7FUZTxZ9O8BdqzotZqvyMe+6EQuQ=
