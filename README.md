@@ -3,8 +3,6 @@
 [![license](https://img.shields.io/github/license/miyako/4d-plugin-xls-basic-excel)](LICENSE)
 ![downloads](https://img.shields.io/github/downloads/miyako/4d-plugin-xls-basic-excel/total)
 
-**Note**: for v17 and earlier, move `manifest.json` to `Contents`
-
 4d-pugin-xls-basic-excel
 ===================
 
