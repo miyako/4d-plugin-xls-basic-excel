@@ -163,7 +163,7 @@ void C_TEXT::convertFromUTF8(const CUTF8String* fromString, CUTF16String* toStri
 	if(len){
 		std::vector<uint8_t> buf((len + 1) * sizeof(PA_Unichar));
 		if(MultiByteToWideChar(CP_UTF8, 0, (LPCSTR)fromString->c_str(), fromString->length(), (LPWSTR)&buf[0], len)){
-			*toString = CUTF16String((const PA_Unichar *)&buf[0]);
+			*toString = CUTF16String((const PA_Unichar *)&buf[0], (size_t)len);
 		}
 	}else{
 			*toString = CUTF16String((const PA_Unichar *)L"");
@@ -175,7 +175,7 @@ void C_TEXT::convertFromUTF8(const CUTF8String* fromString, CUTF16String* toStri
 		int len = CFStringGetLength(str);
 		std::vector<uint8_t> buf((len+1) * sizeof(PA_Unichar));
 		CFStringGetCharacters(str, CFRangeMake(0, len), (UniChar *)&buf[0]);
-		*toString = CUTF16String((const PA_Unichar *)&buf[0]);
+		*toString = CUTF16String((const PA_Unichar *)&buf[0], (size_t)len);
 		CFRelease(str);
 	}
 #endif	
@@ -189,7 +189,7 @@ void C_TEXT::convertToUTF8(const CUTF16String* fromString, CUTF8String* toString
 	if(len){
 		std::vector<uint8_t> buf(len + 1);
 		if(WideCharToMultiByte(CP_UTF8, 0, (LPCWSTR)fromString->c_str(), fromString->length(), (LPSTR)&buf[0], len, NULL, NULL)){
-			*toString = CUTF8String((const uint8_t *)&buf[0]);
+			*toString = CUTF8String((const uint8_t *)&buf[0], (size_t)len);
 		}
 	}else{
 			*toString = CUTF8String((const uint8_t *)"");
@@ -267,6 +267,8 @@ void CUTF8StringReplaceString(CUTF8String *src, const uint8_t *f, const uint8_t 
 {
 	CUTF8String from = CUTF8String(f);
 	CUTF8String to = CUTF8String(t);
+	
+	if(from.empty()) return; // avoid infinite loop: find("", pos) always matches at pos
 	
 	CUTF8String::size_type pos = 0;
 	

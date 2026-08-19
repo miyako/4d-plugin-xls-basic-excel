@@ -1,2 +1,4 @@
 XLS II/build/*
 XLS II/test/userPreferences.*
+build/*
+test/Project/DerivedData/*

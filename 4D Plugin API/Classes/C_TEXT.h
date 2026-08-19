@@ -64,6 +64,15 @@ extern "C" {
 		C_TEXT();
 		~C_TEXT();
 		
+		// _CUTF16String is a raw owned pointer with no reference counting.
+		// The compiler-generated copy ctor/assignment would copy that
+		// pointer shallowly, so two C_TEXT instances could end up both
+		// deleting it (double free) or one holding a dangling pointer
+		// after the other is destroyed. Disallow copying until the class
+		// is changed to hold the string by value instead of via `new`.
+		C_TEXT(const C_TEXT&) = delete;
+		C_TEXT& operator=(const C_TEXT&) = delete;
+		
 	};
 	
 	void CUTF8StringReplaceString(CUTF8String *src, const uint8_t *f, const uint8_t *t);	
