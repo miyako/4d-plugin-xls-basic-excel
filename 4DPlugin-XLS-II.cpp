@@ -402,8 +402,12 @@ void XLS_Load(PA_PluginParameters params) {
         
         BasicExcel *wb = _workbookCreate(&index);
         
-        if(wb->Load(path.c_str()))
+        if(wb->Load(path.c_str())){
             returnValue.setIntValue(index);
+        }else{
+            //load failed: don't leave an orphaned, un-closeable workbook registered
+            _workbookDelete(index);
+        }
         
         returnValue.setReturn(pResult);
 }
@@ -926,17 +930,23 @@ void XLS_Get_long_value(PA_PluginParameters params) {
     int sheetCount = sheet.getIntValue();
     
     if(wb){
-        
-        BasicExcelWorksheet *ws = wb->GetWorksheet(sheetCount-1);
-        if(ws){
-            
-            int r = row.getIntValue();
-            int c = column.getIntValue();
-            
-            BasicExcelCell *cell = ws->Cell(r-1, c-1);
-            if(cell){
-                returnValue.setIntValue(cell->GetInteger());
-                returnValue.setIntValue(1);
+        if((sheetCount > 0) && (sheetCount <= wb->GetTotalWorkSheets())){
+            BasicExcelWorksheet *ws = wb->GetWorksheet(sheetCount-1);
+            if(ws){
+                
+                int r = row.getIntValue();
+                int c = column.getIntValue();
+                
+                if(   (c > 0)
+                     && (c <= ws->GetTotalCols())
+                     && (r > 0)
+                     && (r <= ws->GetTotalRows())){
+                    
+                    BasicExcelCell *cell = ws->Cell(r-1, c-1);
+                    if(cell){
+                        returnValue.setIntValue(cell->GetInteger());
+                    }
+                }
             }
         }
     }
@@ -966,17 +976,24 @@ void XLS_Set_long_value(PA_PluginParameters params) {
     int sheetCount = sheet.getIntValue();
     
     if(wb){
-        
-        BasicExcelWorksheet *ws = wb->GetWorksheet(sheetCount-1);
-        if(ws){
-            
-            int r = row.getIntValue();
-            int c = column.getIntValue();
-            
-            BasicExcelCell *cell = ws->Cell(r-1, c-1);
-            if(cell){
-                cell->SetInteger(intValue.getIntValue());
-                returnValue.setIntValue(1);
+        if((sheetCount > 0) && (sheetCount <= wb->GetTotalWorkSheets())){
+            BasicExcelWorksheet *ws = wb->GetWorksheet(sheetCount-1);
+            if(ws){
+                
+                int r = row.getIntValue();
+                int c = column.getIntValue();
+                
+                if(   (c > 0)
+                     && (c <= ws->GetTotalCols())
+                     && (r > 0)
+                     && (r <= ws->GetTotalRows())){
+                    
+                    BasicExcelCell *cell = ws->Cell(r-1, c-1);
+                    if(cell){
+                        cell->SetInteger(intValue.getIntValue());
+                        returnValue.setIntValue(1);
+                    }
+                }
             }
         }
     }
@@ -1006,17 +1023,24 @@ void XLS_Set_real_value(PA_PluginParameters params) {
     int sheetCount = sheet.getIntValue();
     
     if(wb){
-        
-        BasicExcelWorksheet *ws = wb->GetWorksheet(sheetCount-1);
-        if(ws){
-            
-            int r = row.getIntValue();
-            int c = column.getIntValue();
-            
-            BasicExcelCell *cell = ws->Cell(r-1, c-1);
-            if(cell){
-                cell->SetDouble(realValue.getDoubleValue());
-                returnValue.setIntValue(1);
+        if((sheetCount > 0) && (sheetCount <= wb->GetTotalWorkSheets())){
+            BasicExcelWorksheet *ws = wb->GetWorksheet(sheetCount-1);
+            if(ws){
+                
+                int r = row.getIntValue();
+                int c = column.getIntValue();
+                
+                if(   (c > 0)
+                     && (c <= ws->GetTotalCols())
+                     && (r > 0)
+                     && (r <= ws->GetTotalRows())){
+                    
+                    BasicExcelCell *cell = ws->Cell(r-1, c-1);
+                    if(cell){
+                        cell->SetDouble(realValue.getDoubleValue());
+                        returnValue.setIntValue(1);
+                    }
+                }
             }
         }
     }
@@ -1048,36 +1072,43 @@ void XLS_Set_text_value(PA_PluginParameters params) {
     int sheetCount = sheet.getIntValue();
     
     if(wb){
-        
-        BasicExcelWorksheet *ws = wb->GetWorksheet(sheetCount-1);
-        
-        if(ws){
+        if((sheetCount > 0) && (sheetCount <= wb->GetTotalWorkSheets())){
+            BasicExcelWorksheet *ws = wb->GetWorksheet(sheetCount-1);
             
-            int r = row.getIntValue();
-            int c = column.getIntValue();
-            
-            BasicExcelCell *cell = ws->Cell(r-1, c-1);
-            
-            if(cell){
+            if(ws){
                 
-                if(!encoding.getUTF16Length()) {
+                int r = row.getIntValue();
+                int c = column.getIntValue();
+                
+                if(   (c > 0)
+                     && (c <= ws->GetTotalCols())
+                     && (r > 0)
+                     && (r <= ws->GetTotalRows())){
                     
-                    //set Unicode
+                    BasicExcelCell *cell = ws->Cell(r-1, c-1);
                     
-                    wstring w;
-                    _setString(stringValue, w);
-                    cell->SetWString(w.c_str());
-                    returnValue.setIntValue(1);
-                    
-                }else{
-                    
-                    //set ANSI
-                    
-                    string a;
-                    _setANSIString(stringValue, a, encoding);
-                    cell->SetString(a.c_str());
-                    returnValue.setIntValue(1);
-                    
+                    if(cell){
+                        
+                        if(!encoding.getUTF16Length()) {
+                            
+                            //set Unicode
+                            
+                            wstring w;
+                            _setString(stringValue, w);
+                            cell->SetWString(w.c_str());
+                            returnValue.setIntValue(1);
+                            
+                        }else{
+                            
+                            //set ANSI
+                            
+                            string a;
+                            _setANSIString(stringValue, a, encoding);
+                            cell->SetString(a.c_str());
+                            returnValue.setIntValue(1);
+                            
+                        }
+                    }
                 }
             }
         }
@@ -1667,7 +1698,7 @@ void XLS_SET_WRAPPING(PA_PluginParameters params) {
                     if(cell){
                         
                         XLSFormatManager mgr(*wb);
-                        CellFormat fmt(mgr);
+                        CellFormat fmt(mgr, cell);
                         
                         fmt.set_wrapping((bool)wrapping.getIntValue());
                         
