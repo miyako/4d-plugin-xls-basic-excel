@@ -10,6 +10,20 @@
 
 #include "4DPlugin-XLS-II.h"
 
+#if VERSIONWIN
+/* include/iconv.h hardcodes LIBICONV_PLUG=1, so this file's calls to
+   iconv_open/iconv/iconv_close compile down to references to those plain
+   symbol names. That's correct on macOS, where the system libiconv.dylib
+   exports the plain names — but the vendored lib/windows64/libiconv.lib
+   (built via vcpkg) only exports the libiconv_open/libiconv/libiconv_close
+   prefixed names, which is libiconv's normal non-"plugged" convention.
+   Alias the plain names the linker is looking for to the prefixed ones
+   the .lib actually provides, rather than editing the vendored header. */
+#pragma comment(linker, "/alternatename:iconv_open=libiconv_open")
+#pragma comment(linker, "/alternatename:iconv=libiconv")
+#pragma comment(linker, "/alternatename:iconv_close=libiconv_close")
+#endif
+
 std::mutex mutexWorkbooks;
 
 std::map<uint32_t, BasicExcel*> _workbooks;
